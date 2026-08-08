@@ -73,19 +73,11 @@ img{display:block;max-width:100%}
 
 /* ---------- hero ---------- */
 .hero{position:relative;min-height:94vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;
-  background:linear-gradient(to bottom,var(--void) 0%,var(--void) 34%,var(--sky-mid) 62%,var(--sky-low) 86%,#2B3C60 100%)}
-.stars{position:absolute;inset:0 0 40% 0;pointer-events:none}
+  background:linear-gradient(100deg,rgba(7,10,18,.86) 0%,rgba(7,10,18,.5) 42%,rgba(10,13,21,.16) 68%,rgba(10,13,21,.04) 100%),linear-gradient(to top,rgba(7,10,18,.94) 0%,rgba(7,10,18,.3) 24%,rgba(7,10,18,0) 46%),url("hero-starship.jpg") center/cover no-repeat #0A0D15}
+.stars{display:none}
 .stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#AEB9CC;opacity:.7;animation:tw 4s ease-in-out infinite}
 .stars i:nth-child(odd){animation-delay:2s;opacity:.45}
 @keyframes tw{0%,100%{opacity:.25}50%{opacity:.85}}
-.earth-limb{position:absolute;left:50%;bottom:0;width:170vw;max-width:2300px;aspect-ratio:1;transform:translate(-50%,74%);border-radius:50%;overflow:hidden;pointer-events:none;box-shadow:0 -18px 90px rgba(96,150,255,.28),0 -2px 26px rgba(150,190,255,.35);background:#06090F}
-.limb-roll{position:absolute;top:-15%;left:0;height:125%;display:flex;animation:limbspin 150s linear infinite;will-change:transform}
-.limb-roll img{height:100%;width:auto;display:block;filter:brightness(1.16) saturate(1.28) contrast(1.05)}
-@keyframes limbspin{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@media(prefers-reduced-motion: reduce){.limb-roll{animation:none}}
-.earth-limb::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:inset 0 26px 70px rgba(150,190,255,.30),inset 0 0 140px rgba(4,6,12,.32)}
-.flightlayer{position:absolute;left:0;right:0;bottom:0;height:min(52vh,560px);pointer-events:none;z-index:2}
-.flightlayer svg{width:100%;height:100%;display:block}
 .fpath{stroke:rgba(203,210,220,.28);stroke-width:1.4;fill:none;stroke-dasharray:2 7}
 .fport{fill:var(--plume)}
 .fring{fill:none;stroke:var(--plume);stroke-width:1.2;opacity:.7;animation:pring 2.6s ease-out infinite}
@@ -151,6 +143,7 @@ img{display:block;max-width:100%}
 .port-photo{width:100%;height:224px;object-fit:cover;display:block;filter:saturate(.82) contrast(1.04) brightness(.94);transition:filter .35s}
 .port:hover .port-photo{filter:none}
 .port-artcap{position:absolute;left:0;right:0;bottom:0;padding:26px 14px 9px;background:linear-gradient(to top,rgba(6,9,15,.9),transparent);font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--dim)}
+.port.wide .port-photo{height:auto}
 .port-body{padding:24px 26px 28px}
 .port-name{font-family:var(--disp);font-weight:700;font-size:30px;text-transform:uppercase;letter-spacing:.02em;line-height:1}
 .port-loc{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--plume);text-transform:uppercase;margin:8px 0 16px}
@@ -250,6 +243,11 @@ img{display:block;max-width:100%}
 .wrow:hover .wgo{color:var(--plume)}
 .wire-msg{padding:40px 24px;text-align:center;font-family:var(--mono);font-size:13px;color:var(--dim)}
 .wire-msg a{color:var(--plume)}
+
+/* ---------- section banners ---------- */
+.sec-banner{margin:0 0 26px;border:1px solid var(--line);background:var(--panel)}
+.sec-banner img{width:100%;display:block}
+.sec-banner figcaption{padding:8px 14px;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase;border-top:1px solid var(--line-soft)}
 
 /* ---------- ports radar map ---------- */
 .portmap{border:1px solid var(--line);background:#070B13;position:relative;aspect-ratio:2/1;overflow:hidden;margin-bottom:26px}
@@ -400,16 +398,7 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
 <section class="hero">
   <div class="stars" id="stars" aria-hidden="true"></div>
 
-  <div class="earth-limb" aria-hidden="true">
-    <div class="limb-roll">
-      <img src="https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg" alt="" loading="eager" crossorigin="anonymous">
-      <img src="https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg" alt="" crossorigin="anonymous">
-    </div>
-  </div>
-
-  <div class="flightlayer" aria-hidden="true">
-    <svg viewBox="0 0 1200 420" preserveAspectRatio="xMidYMax meet">
-      <defs>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
         <linearGradient id="plumegrad" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0" stop-color="#FFD9A6"/><stop offset=".45" stop-color="#FF8A3D"/><stop offset="1" stop-color="#FF8A3D" stop-opacity="0"/>
         </linearGradient>
@@ -421,35 +410,8 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
           <path class="ship-line" d="M30 -5 C33 -3 33 3 30 5 M14 -5 V5"/>
           <circle class="ship-win" cx="41" cy="-1.6" r="1.1"/>
         </g>
-      </defs>
-      <!-- suborbital corridors -->
-      <path id="fpath"  class="fpath" d="M150 272 Q600 20 1050 272"/>
-      <path id="fpath2" class="fpath" style="opacity:.5" d="M330 306 Q650 128 950 306"/>
-      <path id="fpath3" class="fpath" style="opacity:.35" d="M240 318 Q600 190 900 318"/>
-      <line class="vline" x1="150" y1="332" x2="150" y2="272"/>
-      <line class="vline" x1="1050" y1="332" x2="1050" y2="272"/>
-      <!-- city skylines on the limb -->
-      <g class="skyline" aria-hidden="true">
-        <path d="M96 332 V310 h8 v-8 h6 v8 h9 V296 h7 v36 M132 332 V302 h9 v30 M147 332 v-46 l3 -12 l3 12 v46 M159 332 V306 h10 v26 M175 332 V314 h9 v18 M190 332 V318 h10 v14"/>
-        <path d="M994 332 V316 h9 v16 M1009 332 V300 h8 v32 M1023 332 v-30 h3 v-9 a5 5 0 0 1 0 -1 a6 6 0 1 1 1 0 v10 h3 v30 M1041 332 V308 h10 v24 M1057 332 V318 h9 v14 M1072 332 V312 h8 v20"/>
-      </g>
-      <g transform="translate(150 332)"><circle class="fport" r="4"/><circle class="fring" r="8"/></g>
-      <g transform="translate(1050 332)"><circle class="fport" r="4"/><circle class="fring" r="8"/></g>
-      <text id="fp-a" class="flbl" x="150" y="362" text-anchor="middle">NEW YORK</text>
-      <text id="fp-b" class="flbl" x="1050" y="362" text-anchor="middle">SHANGHAI</text>
-      <text id="fp-t" class="flbl hotlbl" x="600" y="30" text-anchor="middle">39 MIN · SUBORBITAL</text>
-      <g id="traffic1" class="traffic" opacity="0"><g transform="scale(.62)"><use href="#ship-shape"/></g></g>
-      <g id="traffic2" class="traffic t2" opacity="0"><g transform="scale(.5)"><use href="#ship-shape"/></g></g>
-      <g id="heroship" opacity="0">
-        <path class="plume-f" id="heroplume" d="M-3 -3 L-34 0 L-3 3 Z" opacity="0"/>
-        <path class="ship-fill" d="M0 -5 H30 C38 -5 44 -2.6 47 0 C44 2.6 38 5 30 5 H0 C-1.6 5 -2.6 4 -2.6 2.6 V-2.6 C-2.6 -4 -1.6 -5 0 -5 Z"/>
-        <path class="ship-fill" d="M2 -5 L8 -10 L13 -5 Z M2 5 L8 10 L13 5 Z"/>
-        <path class="ship-fill" d="M34 -4.2 L38.5 -7.6 L41.5 -4 Z M34 4.2 L38.5 7.6 L41.5 4 Z"/>
-        <path class="ship-line" d="M30 -5 C33 -3 33 3 30 5 M14 -5 V5"/>
-        <circle class="ship-win" cx="41" cy="-1.6" r="1.1"/>
-      </g>
-    </svg>
-  </div>
+      </defs></svg>
+
 
   <div class="hero-in">
     <span class="kicker rv d1"><b>SPACEPORTS.EARTH</b> — INDEPENDENT GUIDE TO THE PLANETARY DEPARTURE NETWORK</span>
@@ -505,6 +467,7 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
       <span class="kicker">SEC 02 · STARSHIP TEST PROGRAM</span>
     </div>
     <p class="sec-note rv">Every Starship flight on record — hops, integrated tests and operational missions — pulled live from the launch library the moment a new one flies. Newest on the left; scroll the strip for the whole program.</p>
+    <figure class="sec-banner rv"><img src="reentry.jpg" alt="Starship during atmospheric reentry over night-side Earth — AI concept" loading="lazy"><figcaption>Reentry interface · AI concept</figcaption></figure>
     <div class="hero-strip rv" style="margin:0 0 22px">
       <div class="chip"><div class="lbl">Flights logged</div><div class="val mono" id="fl-count">--</div><div class="sub">Live program count</div></div>
       <div class="chip"><div class="lbl">Latest outcome</div><div class="val mono" id="fl-last">--</div><div class="sub" id="fl-lastsub">Acquiring…</div></div>
@@ -538,8 +501,8 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
       <!-- STARBASE -->
       <article class="port rv">
         <div class="port-art">
-          <img class="port-photo" src="https://images-assets.nasa.gov/image/11%2004%2024%20hls%202%20raptors/11%2004%2024%20hls%202%20raptors~medium.jpg" alt="Starship with Raptor engines — NASA/SpaceX concept art" loading="lazy">
-          <div class="port-artcap">STARSHIP · RAPTORS — NASA/SPACEX RENDER</div>
+          <img class="port-photo" src="starbase-pad.jpg" alt="Starship and Super Heavy stacked on the launch mount at sunset — AI concept render" loading="lazy">
+          <div class="port-artcap">FULL STACK AT DUSK · AI RENDER</div>
         </div>
         <div class="port-body">
           <h3 class="port-name">Starbase</h3>
@@ -614,63 +577,8 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
       <!-- FUTURE -->
       <article class="port wide rv">
         <div class="port-art">
-          <svg viewBox="0 0 1200 340" preserveAspectRatio="xMidYMid slice" aria-label="Concept: offshore sea-rig spaceport staging Starships off New York" role="img">
-            <defs>
-              <linearGradient id="oc-sky" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#0A0F1C"/><stop offset=".55" stop-color="#16223C"/><stop offset=".78" stop-color="#3A3550"/><stop offset="1" stop-color="#7A4A3C"/>
-              </linearGradient>
-              <linearGradient id="oc-sea" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#1A2439"/><stop offset="1" stop-color="#0A0F1A"/>
-              </linearGradient>
-              <linearGradient id="oc-pl" x1="0" y1="1" x2="0" y2="0">
-                <stop offset="0" stop-color="#FFE2B0"/><stop offset=".5" stop-color="#FF8A3D"/><stop offset="1" stop-color="#FF8A3D" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-            <rect width="1200" height="252" fill="url(#oc-sky)"/>
-            <!-- NYC skyline backdrop -->
-            <g fill="#101726" stroke="#1E2A42" stroke-width=".8">
-              <path d="M0 252 V210 h26 v-14 h18 v14 h20 V196 h24 v56 M96 252 V206 h20 v46 M126 252 V178 l5 -8 5 8 v74 M146 252 V214 h26 v38 M182 252 V188 h14 l4 -34 4 34 h12 v64 M226 252 V202 h22 v50 M258 252 v-58 l16 -10 16 10 v58 M300 252 V220 h20 v32 M330 252 V196 h10 V150 l4 -26 4 26 v46 h10 v56 M368 252 V212 h24 v40 M402 252 V226 h18 v26"/>
-              <path d="M430 252 V232 h16 v20 M456 252 V218 h20 v34 M486 252 V236 h14 v16"/>
-            </g>
-            <g class="sky-glow"><path d="M0 252 H520" opacity=".5"/></g>
-            <!-- sea -->
-            <rect y="252" width="1200" height="88" fill="url(#oc-sea)"/>
-            <path d="M60 276 h56 M180 292 h44 M320 268 h64 M760 300 h70 M1010 280 h56 M900 316 h44" stroke="#2A3A57" stroke-width="1.4" opacity=".7" fill="none"/>
-            <!-- sea rig -->
-            <g>
-              <path d="M560 268 l14 46 h-18 z M700 268 l14 46 h-18 z M860 268 l14 46 h-18 z M1010 268 l14 46 h-18 z" fill="#0E1522" stroke="#33415F"/>
-              <rect x="536" y="240" width="514" height="30" fill="#131C2E" stroke="#3A4763"/>
-              <rect x="536" y="236" width="514" height="6" fill="#1C2740"/>
-              <path d="M560 236 v-40 h8 l20 12 v28 M1042 236 v-52 h-8 l-22 14 v38" fill="none" stroke="#4A5978" stroke-width="3"/>
-              <rect x="596" y="222" width="30" height="14" fill="#0E1522" stroke="#33415F"/>
-              <rect x="948" y="216" width="40" height="20" fill="#0E1522" stroke="#33415F"/>
-              <circle cx="547" cy="232" r="2.4" fill="#E0B34C"><animate attributeName="opacity" values="1;.15;1" dur="2.2s" repeatCount="indefinite"/></circle>
-              <circle cx="1040" cy="228" r="2.4" fill="#E06C5B"><animate attributeName="opacity" values=".15;1;.15" dur="2.2s" repeatCount="indefinite"/></circle>
-            </g>
-            <!-- three staged starships -->
-            <g stroke="#8F9AAC" stroke-width="1">
-              <g transform="translate(676 236)">
-                <rect x="-11" y="-104" width="22" height="104" rx="8" fill="#D8DEE7"/>
-                <path d="M-11 -104 Q0 -132 11 -104" fill="#D8DEE7"/>
-                <path d="M-11 -16 l-12 16 h12 M11 -16 l12 16 h-12" fill="#C4CBD6"/>
-                <path d="M-11 -96 l-9 10 M11 -96 l9 10" fill="none"/>
-              </g>
-              <g transform="translate(806 236)">
-                <rect x="-11" y="-104" width="22" height="104" rx="8" fill="#AEB7C4"/>
-                <path d="M-11 -104 Q0 -132 11 -104" fill="#AEB7C4"/>
-                <path d="M-11 -16 l-12 16 h12 M11 -16 l12 16 h-12" fill="#98A2B1"/>
-                <path d="M0 0 v10 M-6 0 v7 M6 0 v7" stroke="#7E8AA0"/>
-              </g>
-              <g transform="translate(922 176)">
-                <path d="M-8 24 L0 74 L8 24 Z" fill="url(#oc-pl)" stroke="none"/>
-                <rect x="-11" y="-80" width="22" height="104" rx="8" fill="#E4E9F0"/>
-                <path d="M-11 -80 Q0 -108 11 -80" fill="#E4E9F0"/>
-                <path d="M-11 8 l-12 16 h12 M11 8 l12 16 h-12" fill="#CBD2DC"/>
-              </g>
-            </g>
-            <ellipse cx="922" cy="300" rx="60" ry="8" fill="#FF8A3D" opacity=".18"/>
-            <text x="24" y="326" class="dglabel">CONCEPT · OFFSHORE STAGING RIG — NY HARBOR APPROACH · THREE-BAY GANTRY</text>
-          </svg>
+          <img class="port-photo" src="seaport-concept.jpg" alt="AI concept: offshore sea-rig spaceport staging four Starships, city skyline beyond" loading="lazy">
+          <div class="port-artcap">SEA-RIG STAGING, HARBOR APPROACH · AI CONCEPT ART</div>
         </div>
         <div class="port-body">
           <div>
@@ -700,6 +608,8 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
     <p class="sec-note rv">The most radical spaceport idea isn't about leaving Earth at all: Starship flying city to city on suborbital arcs, most of the trip spent coasting above the atmosphere. Concept flight times below are from SpaceX's 2017 Earth-to-Earth study. The globe below is live — it draws the real day/night line for this exact moment from the Sun's position. Drag to spin it; hover a route to trace the arc.</p>
 
     <div class="e2e">
+      <figure class="sec-banner rv"><img src="starship-coast.jpg" alt="Starship in atmospheric flight above a coastline — AI concept" loading="lazy"><figcaption>Suborbital leg, feet dry · AI concept</figcaption></figure>
+
       <div class="globe-wrap rv" id="globewrap">
         <canvas id="globe" aria-label="Interactive Earth globe with live day and night and concept routes"></canvas>
         <div class="globe-hud"><span class="sunlive" id="sunspot">SUBSOLAR — CALCULATING…</span><span>DRAG TO SPIN · LIVE TERMINATOR</span></div>
@@ -756,12 +666,9 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
     <div class="dest">
       <article class="dcard rv">
         <div class="orbit-scene s-leo" aria-hidden="true">
-          <img class="obg" src="https://images-assets.nasa.gov/image/iss058e005282/iss058e005282~medium.jpg" alt="" loading="lazy">
-          <svg class="oflight" viewBox="0 0 360 180" preserveAspectRatio="none">
-            <path id="bpath1" d="M-40 66 Q180 34 400 76" fill="none" stroke="none"/>
-            <g class="pship" data-follow="#bpath1" data-dur="9" data-scale=".62" opacity="0"><use href="#ship-shape"/></g>
-          </svg>
-          <div class="ocap">AURORA TRANSIT · PHOTO: NASA/ISS</div>
+          <img class="obg" src="orbit-starship.jpg" alt="" loading="lazy">
+          
+          <div class="ocap">STARSHIP ON ORBIT · AI CONCEPT</div>
         </div>
         <div class="dnum">DEST 01 · 400 KM UP</div>
         <h3 class="dname">Orbit</h3>
@@ -960,7 +867,7 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
     <div>
       <div class="f-brand">Spaceports<span>.Earth</span></div>
       <p class="f-made">Created by <b>Mario E. Delgado</b> — one of the biggest supporters and fans of interplanetary travel and space exploration.</p>
-      <p class="f-note">An independent reference site. Not affiliated with, sponsored by, or endorsed by SpaceX or NASA. SpaceX, Falcon, Starship and Dragon are trademarks of Space Exploration Technologies Corp. Launch data via The Space Devs; imagery and planet textures via NASA's public-domain library. Nothing on this site is investment advice.</p>
+      <p class="f-note">An independent reference site. Not affiliated with, sponsored by, or endorsed by SpaceX or NASA. SpaceX, Falcon, Starship and Dragon are trademarks of Space Exploration Technologies Corp. Launch data via The Space Devs; imagery and planet textures via NASA's public-domain library; concept art AI-generated for this site. Nothing on this site is investment advice.</p>
       <div class="f-utc" id="utc2">UTC --:--:--</div>
     </div>
     <div>
