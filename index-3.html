@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPACEPORTS.EARTH — The Planetary Departure Guide</title>
+<meta name="author" content="Mario E. Delgado">
+<meta name="description" content="Independent guide to Earth's spaceports: live departures, SpaceX launch sites, Earth-to-Earth Starship travel, and destinations beyond.">
+<meta property="og:title" content="SPACEPORTS.EARTH">
+<meta property="og:description" content="Live departures, launch sites, Earth-to-Earth routes, and destinations beyond. Earth's departure guide.">
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="22" fill="none" stroke="%23CBD2DC" stroke-width="3"/><circle cx="32" cy="10" r="7" fill="%23FF7A2F"/></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="dns-prefetch" href="https://images-assets.nasa.gov">
+<link rel="dns-prefetch" href="https://unpkg.com">
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Big+Shoulders+Display:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#0A0D15;
+  --sky-mid:#111A2E;
+  --sky-low:#1C2A47;
+  --dawn:#E8D9C3;
+  --panel:#0E1522;
+  --panel-2:#111928;
+  --line:#233149;
+  --line-soft:#1A2437;
+  --steel:#CBD2DC;
+  --dim:#8A94A6;
+  --faint:#5A6478;
+  --plume:#FF7A2F;
+  --plume-soft:rgba(255,122,47,.14);
+  --go:#57C785;
+  --hold:#E0B34C;
+  --heat:linear-gradient(92deg,#D9B36C 0%,#C97F3F 34%,#9A6BC9 68%,#4E9FD1 100%);
+  --disp:"Big Shoulders Display",sans-serif;
+  --body:"Archivo",sans-serif;
+  --mono:"IBM Plex Mono",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--steel);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--steel);text-decoration:none}
+img{display:block;max-width:100%}
+::selection{background:var(--plume);color:#0A0D15}
+:focus-visible{outline:2px solid var(--plume);outline-offset:3px}
+
+/* ---------- utility ---------- */
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono)}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+.kicker b{color:var(--plume);font-weight:500}
+.sec{padding:110px 0;border-top:1px solid var(--line-soft)}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+.sec-title{font-family:var(--disp);font-weight:700;font-size:clamp(38px,5.4vw,64px);letter-spacing:.015em;text-transform:uppercase;line-height:.95}
+.sec-note{max-width:640px;color:var(--dim);margin-bottom:44px;font-size:15px}
+.sec-note a{color:var(--steel);border-bottom:1px solid var(--line);transition:border-color .2s}
+.sec-note a:hover{border-color:var(--plume)}
+
+/* reveal on scroll */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+
+/* ---------- header ---------- */
+.top{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(10,13,21,.78);backdrop-filter:blur(10px);border-bottom:1px solid var(--line-soft)}
+.top-in{max-width:1240px;margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-family:var(--disp);font-weight:800;font-size:20px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.brand span{background:var(--heat);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav{display:flex;gap:22px;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;white-space:nowrap;transition:color .2s}
+.nav a:hover{color:var(--plume)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:94vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;
+  background:linear-gradient(100deg,rgba(7,10,18,.86) 0%,rgba(7,10,18,.5) 42%,rgba(10,13,21,.16) 68%,rgba(10,13,21,.04) 100%),linear-gradient(to top,rgba(7,10,18,.94) 0%,rgba(7,10,18,.3) 24%,rgba(7,10,18,0) 46%),url("hero-starship.jpg") center/cover no-repeat #0A0D15}
+.stars{display:none}
+.stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#AEB9CC;opacity:.7;animation:tw 4s ease-in-out infinite}
+.stars i:nth-child(odd){animation-delay:2s;opacity:.45}
+@keyframes tw{0%,100%{opacity:.25}50%{opacity:.85}}
+.fpath{stroke:rgba(203,210,220,.28);stroke-width:1.4;fill:none;stroke-dasharray:2 7}
+.fport{fill:var(--plume)}
+.fring{fill:none;stroke:var(--plume);stroke-width:1.2;opacity:.7;animation:pring 2.6s ease-out infinite}
+@keyframes pring{0%{transform:scale(.4);opacity:.8}100%{transform:scale(2.2);opacity:0}}
+.flbl{font-family:var(--mono);font-size:11px;letter-spacing:.14em;fill:var(--dim)}
+.flbl.hotlbl{fill:var(--plume)}
+.ship-fill{fill:#D8DEE7}.ship-line{stroke:#8F9AAC;stroke-width:1;fill:none}.ship-win{fill:#39445C}
+.plume-f{fill:url(#plumegrad)}
+.skyline{fill:#141C2E;stroke:#26334E;stroke-width:.6}
+.sky-glow{fill:none;stroke:rgba(255,183,120,.35);stroke-width:1}
+.traffic{opacity:.55}
+.traffic.t2{opacity:.4}
+.vline{stroke:rgba(203,210,220,.2);stroke-width:1;stroke-dasharray:1 5}
+.hero-in{position:relative;z-index:2;width:100%;max-width:1240px;margin:0 auto;padding:120px 24px 150px}
+.hero .kicker{display:block;margin-bottom:22px}
+.wordmark{font-family:var(--disp);font-weight:800;text-transform:uppercase;line-height:.88;letter-spacing:.01em;font-size:clamp(64px,12.5vw,176px)}
+.wordmark .earth{display:block;background:var(--heat);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-sub{max-width:560px;margin-top:26px;color:var(--dim);font-size:17px}
+.hero-strip{display:flex;flex-wrap:wrap;gap:14px;margin-top:44px}
+.chip{border:1px solid var(--line);background:rgba(14,21,34,.6);padding:14px 18px;min-width:210px}
+.chip .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--faint);text-transform:uppercase;margin-bottom:6px}
+.chip .val{font-family:var(--mono);font-size:20px;color:var(--steel)}
+.chip .val em{font-style:normal;color:var(--plume)}
+.chip .sub{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:6px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px}
+.hero .rv{transition-duration:.9s}
+.hero .d1{transition-delay:.08s}.hero .d2{transition-delay:.2s}.hero .d3{transition-delay:.34s}.hero .d4{transition-delay:.5s}
+
+/* ---------- departures board ---------- */
+.board-tools{display:flex;gap:10px;margin-bottom:18px}
+.fbtn{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);background:none;border:1px solid var(--line);padding:8px 16px;cursor:pointer;transition:all .2s}
+.fbtn:hover{color:var(--steel);border-color:var(--dim)}
+.fbtn.on{color:var(--plume);border-color:var(--plume);background:var(--plume-soft)}
+.board{border:1px solid var(--line);background:var(--panel)}
+.brow{display:grid;grid-template-columns:96px minmax(220px,2fr) 1.1fr 1.4fr 1fr 92px;gap:16px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line-soft)}
+.brow:last-child{border-bottom:none}
+.brow.head{background:var(--panel-2);padding:11px 20px}
+.brow.head span{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--faint);text-transform:uppercase}
+.brow.r{opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease}
+.brow.r.in{opacity:1;transform:none}
+.brow.r:hover{background:var(--panel-2)}
+.bimg{width:96px;height:54px;object-fit:cover;filter:grayscale(1) brightness(.85);border:1px solid var(--line-soft);transition:filter .3s}
+.brow:hover .bimg{filter:none}
+.bmission{font-family:var(--disp);font-weight:700;font-size:21px;letter-spacing:.03em;text-transform:uppercase;line-height:1.05}
+.bmission small{display:block;font-family:var(--mono);font-weight:400;font-size:11px;color:var(--dim);letter-spacing:.06em;text-transform:none;margin-top:3px}
+.bcell{font-family:var(--mono);font-size:12.5px;color:var(--dim);letter-spacing:.03em;line-height:1.45}
+.bcell b{display:block;color:var(--steel);font-weight:500}
+.bstatus{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;justify-self:end;padding:5px 10px;border:1px solid var(--line);color:var(--dim)}
+.bstatus.go{color:var(--go);border-color:rgba(87,199,133,.4)}
+.bstatus.tbd{color:var(--hold);border-color:rgba(224,179,76,.4)}
+.board-msg{padding:40px 24px;text-align:center;color:var(--dim);font-family:var(--mono);font-size:13px;letter-spacing:.04em}
+.board-msg a{color:var(--plume)}
+.board-credit{margin-top:12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--faint)}
+.board-credit a{color:var(--dim);border-bottom:1px solid var(--line)}
+.spx-tag{color:var(--plume)}
+
+/* ---------- ports ---------- */
+.ports{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.port{border:1px solid var(--line);background:var(--panel);padding:0;display:flex;flex-direction:column;transition:border-color .25s}
+.port:hover{border-color:#31415F}
+.port-art{border-bottom:1px solid var(--line-soft);background:linear-gradient(to bottom,#0C1220,#101A2E)}
+.port-art svg{display:block;width:100%;height:auto}
+.port-art{position:relative}
+.port-photo{width:100%;height:224px;object-fit:cover;display:block;filter:saturate(.82) contrast(1.04) brightness(.94);transition:filter .35s}
+.port:hover .port-photo{filter:none}
+.port-artcap{position:absolute;left:0;right:0;bottom:0;padding:26px 14px 9px;background:linear-gradient(to top,rgba(6,9,15,.9),transparent);font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--dim)}
+.port.wide .port-photo{height:auto}
+.port-body{padding:24px 26px 28px}
+.port-name{font-family:var(--disp);font-weight:700;font-size:30px;text-transform:uppercase;letter-spacing:.02em;line-height:1}
+.port-loc{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--plume);text-transform:uppercase;margin:8px 0 16px}
+.port-desc{color:var(--dim);font-size:14.5px;margin-bottom:18px}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;border-top:1px solid var(--line-soft);padding-top:16px}
+.fact .fl{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase}
+.fact .fv{font-family:var(--mono);font-size:13px;color:var(--steel);margin-top:2px}
+.port.wide{grid-column:1/-1}
+.port.wide .port-body{display:grid;grid-template-columns:1.2fr 1fr;gap:12px 48px}
+.port.wide .facts{grid-column:2;grid-row:1/3;align-content:start;border-top:none;border-left:1px solid var(--line-soft);padding:0 0 0 32px;grid-template-columns:1fr}
+
+/* svg diagram strokes */
+.dg{stroke:var(--steel);stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.dgd{stroke:#44506B;stroke-width:1.2;fill:none;stroke-linecap:round}
+.dga{stroke:var(--plume);stroke-width:1.6;fill:none;stroke-linecap:round}
+.dgf{fill:var(--plume)}
+.dglabel{font-family:var(--mono);font-size:9px;letter-spacing:.16em;fill:var(--faint)}
+
+/* ---------- earth to earth ---------- */
+.e2e{display:grid;grid-template-columns:1fr;gap:36px}
+.routemap{border:1px solid var(--line);background:var(--panel);padding:10px}
+.routemap svg{display:block;width:100%;height:auto}
+.grat{stroke:#1B2537;stroke-width:1}
+.city{fill:var(--steel)}
+.citylbl{font-family:var(--mono);font-size:11px;fill:var(--dim);letter-spacing:.08em}
+.arc{stroke:#3D4A66;stroke-width:1.4;fill:none;transition:stroke .2s,stroke-width .2s}
+.arc.hot{stroke:var(--plume);stroke-width:2.2}
+.rtable{border:1px solid var(--line);background:var(--panel)}
+.rrow{display:grid;grid-template-columns:1fr 110px 130px;gap:16px;align-items:baseline;padding:15px 22px;border-bottom:1px solid var(--line-soft);cursor:pointer;transition:background .2s}
+.rrow:last-child{border-bottom:none}
+.rrow.head{cursor:default;background:var(--panel-2);padding:11px 22px}
+.rrow.head span{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--faint);text-transform:uppercase}
+.rrow:not(.head):hover,.rrow.hot{background:var(--panel-2)}
+.rpair{font-family:var(--disp);font-weight:700;font-size:22px;text-transform:uppercase;letter-spacing:.03em}
+.rpair i{font-style:normal;color:var(--plume);padding:0 6px}
+.rmin{font-family:var(--mono);font-size:18px;color:var(--steel)}
+.rmin small{font-size:11px;color:var(--faint)}
+.rjet{font-family:var(--mono);font-size:12px;color:var(--faint);text-decoration:line-through;justify-self:end}
+
+/* ---------- beyond ---------- */
+.dest{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.dcard{border:1px solid var(--line);background:var(--panel);padding:26px;position:relative;overflow:hidden}
+.dnum{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--faint)}
+.dname{font-family:var(--disp);font-weight:800;font-size:40px;text-transform:uppercase;line-height:1;margin:10px 0 14px}
+.ddesc{color:var(--dim);font-size:14px;margin-bottom:20px;min-height:66px}
+.dstats{border-top:1px solid var(--line-soft);padding-top:14px;display:grid;gap:9px}
+.ds{display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:12px}
+.ds span{color:var(--faint);letter-spacing:.1em;text-transform:uppercase;font-size:10px;padding-top:2px}
+.ds b{color:var(--steel);font-weight:500;text-align:right}
+
+/* ---------- film ---------- */
+.films{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.film{border:1px solid var(--line);background:var(--panel)}
+.film .ratio{position:relative;padding-top:56.25%}
+.film iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.film-cap{display:flex;justify-content:space-between;gap:12px;padding:13px 18px;border-top:1px solid var(--line-soft);font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
+.film-cap b{color:var(--steel);font-weight:500}
+
+/* ---------- archive ---------- */
+.gal-tools{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.gitem{position:relative;border:1px solid var(--line);background:var(--panel);aspect-ratio:4/3;overflow:hidden}
+.gitem img{width:100%;height:100%;object-fit:cover;filter:grayscale(.9) brightness(.85);transition:filter .35s,transform .5s}
+.gitem:hover img{filter:none;transform:scale(1.04)}
+.gitem figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px 12px 9px;background:linear-gradient(to top,rgba(6,9,15,.92),transparent);font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gal-msg{grid-column:1/-1;padding:40px 0;text-align:center;font-family:var(--mono);font-size:13px;color:var(--dim)}
+
+/* ---------- flight log ---------- */
+.flstrip{display:grid;grid-auto-flow:column;grid-auto-columns:236px;gap:14px;overflow-x:auto;padding:4px 4px 18px;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.flcard{scroll-snap-align:start;border:1px solid var(--line);background:var(--panel);padding:20px 20px 18px;display:flex;flex-direction:column;gap:8px;min-height:198px;transition:border-color .25s}
+.flcard:hover{border-color:#31415F}
+.flcard.next{border-style:dashed;border-color:rgba(255,122,47,.55)}
+.flnum{font-family:var(--disp);font-weight:800;font-size:54px;line-height:.9}
+.flcard.next .flnum{color:var(--plume)}
+.flmiss{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);min-height:30px}
+.fldate{font-family:var(--mono);font-size:12px;color:var(--steel)}
+.flpad{font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.06em}
+.flpill{margin-top:auto;align-self:flex-start;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:4px 9px;border:1px solid var(--line);color:var(--dim)}
+.flpill.ok{color:var(--go);border-color:rgba(87,199,133,.45)}
+.flpill.bad{color:#E06C5B;border-color:rgba(224,108,91,.45)}
+.flpill.part{color:var(--hold);border-color:rgba(224,179,76,.45)}
+.flpill.up{color:var(--plume);border-color:rgba(255,122,47,.5)}
+
+/* ---------- wire ---------- */
+.wire{border:1px solid var(--line);background:var(--panel)}
+.wrow{display:grid;grid-template-columns:150px 1fr auto;gap:20px;padding:18px 22px;border-bottom:1px solid var(--line-soft);align-items:start;transition:background .2s}
+.wrow:last-child{border-bottom:none}
+.wrow:hover{background:var(--panel-2)}
+.wimg{width:150px;height:86px;object-fit:cover;border:1px solid var(--line-soft);filter:grayscale(.7) brightness(.9);transition:filter .3s}
+.wrow:hover .wimg{filter:none}
+.whead{display:block;font-family:var(--disp);font-weight:700;font-size:22px;line-height:1.08;letter-spacing:.02em;text-transform:uppercase;transition:color .2s}
+.wrow:hover .whead{color:var(--plume)}
+.wmeta{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--faint);text-transform:uppercase;margin-top:7px}
+.wmeta b{color:var(--dim);font-weight:500}
+.wsum{color:var(--dim);font-size:13.5px;margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.wgo{font-family:var(--mono);font-size:16px;color:var(--faint);align-self:center}
+.wrow:hover .wgo{color:var(--plume)}
+.wire-msg{padding:40px 24px;text-align:center;font-family:var(--mono);font-size:13px;color:var(--dim)}
+.wire-msg a{color:var(--plume)}
+
+/* ---------- section banners ---------- */
+.sec-banner{margin:0 0 26px;border:1px solid var(--line);background:var(--panel)}
+.sec-banner img{width:100%;display:block}
+.sec-banner figcaption{padding:8px 14px;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase;border-top:1px solid var(--line-soft)}
+
+/* ---------- ports radar map ---------- */
+.portmap{border:1px solid var(--line);background:#070B13;position:relative;aspect-ratio:2/1;overflow:hidden;margin-bottom:26px}
+.pm-zoom{position:absolute;inset:0;transform-origin:23% 36%;transform:scale(2.1);transition:transform 5.5s cubic-bezier(.22,.8,.25,1)}
+.pm-zoom.out{transform:scale(1)}
+.pm-img{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;opacity:.9;filter:brightness(1.05)}
+.pm-svg{position:absolute;inset:0;width:100%;height:100%}
+.pm-port{fill:var(--plume)}
+.pm-ring{fill:none;stroke:var(--plume);stroke-width:1}
+.pm-fut{fill:none;stroke:var(--dim);stroke-width:1;stroke-dasharray:2 3}
+.pm-city{fill:#5A6478;transition:fill .3s}
+.pm-city.lit{fill:#FFD9A6}
+.pm-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;fill:#FFD9A6;opacity:0;transition:opacity .4s}
+.pm-lbl.lit{opacity:1}
+.pm-hud{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;padding:9px 14px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase;background:linear-gradient(to top,rgba(6,9,15,.85),transparent);pointer-events:none}
+.pm-hud #pm-ping{color:var(--dim)}
+@media(max-width:560px){.portmap{aspect-ratio:8/5}}
+
+/* ---------- live globe ---------- */
+.globe-wrap{border:1px solid var(--line);background:radial-gradient(120% 120% at 50% 0%,#0D1424 0%,#080C15 60%);position:relative;aspect-ratio:16/10;overflow:hidden;margin-bottom:22px}
+.globe-wrap canvas{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.globe-wrap canvas:active{cursor:grabbing}
+.globe-hud{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;gap:12px;padding:10px 14px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--faint);text-transform:uppercase;background:linear-gradient(to top,rgba(6,9,15,.85),transparent);pointer-events:none}
+.globe-hud .sunlive b{color:var(--plume);font-weight:500}
+.flat-hidden{display:none}
+@media(max-width:560px){.globe-wrap{aspect-ratio:1/1}.globe-hud span:last-child{display:none}}
+
+/* ---------- beyond orbit scenes ---------- */
+.orbit-scene{position:relative;height:180px;margin:-26px -26px 18px;border-bottom:1px solid var(--line-soft);overflow:hidden;background:radial-gradient(90% 120% at 50% 0%,#0C1322 0%,#080C15 70%)}
+.planet{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:104px;height:104px;border-radius:50%;object-fit:cover;box-shadow:0 0 34px rgba(120,160,255,.18),inset -16px -12px 30px rgba(0,0,0,.55)}
+.obg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.92;filter:saturate(1.1)}
+.oflight{position:absolute;inset:0;width:100%;height:100%}
+.ocap{position:absolute;left:0;right:0;bottom:0;padding:20px 12px 7px;background:linear-gradient(to top,rgba(6,9,15,.85),transparent);font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--dim)}
+.mini-earth{position:absolute;left:22px;bottom:14px;width:52px;height:52px;border-radius:50%;object-fit:cover;transform:scale(1.12);box-shadow:0 0 18px rgba(120,160,255,.25)}
+.mini-moon{position:absolute;right:26px;top:16px;width:66px;height:66px;border-radius:50%;object-fit:cover;box-shadow:inset -10px -8px 18px rgba(0,0,0,.6),0 0 14px rgba(200,210,230,.12)}
+.big-mars{position:absolute;right:-34px;top:50%;transform:translateY(-50%) scale(1.12);width:150px;height:150px;border-radius:50%;object-fit:cover;box-shadow:inset -18px -10px 30px rgba(0,0,0,.6),0 0 26px rgba(255,140,90,.16)}
+.tli-track{stroke:#3A4763;stroke-width:1;stroke-dasharray:3 6}
+.orbiter{position:absolute;left:0;top:0;width:26px;height:26px;will-change:transform;transition:opacity .3s}
+.orbiter svg{width:100%;height:100%;overflow:visible}
+
+/* ---------- holdings ---------- */
+.hold{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:22px}
+.htile{border:1px solid var(--line);background:var(--panel);padding:26px;display:flex;flex-direction:column}
+.htick{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--plume);text-transform:uppercase}
+.hname{font-family:var(--disp);font-weight:800;font-size:34px;text-transform:uppercase;line-height:1;margin:8px 0 12px}
+.hdesc{color:var(--dim);font-size:13.5px;margin-bottom:18px}
+.hstats{border-top:1px solid var(--line-soft);padding-top:14px;display:grid;gap:9px;margin-bottom:18px}
+.hlinks{margin-top:auto;display:flex;gap:14px;flex-wrap:wrap}
+.hlinks a{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--line);padding-bottom:2px;transition:color .2s,border-color .2s}
+.hlinks a:hover{color:var(--plume);border-color:var(--plume)}
+.sigfeed{border:1px solid var(--line);background:var(--panel)}
+.sighead{padding:12px 20px;border-bottom:1px solid var(--line-soft);background:var(--panel-2);font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--faint);text-transform:uppercase}
+.sig{display:flex;justify-content:space-between;gap:18px;align-items:baseline;padding:13px 20px;border-bottom:1px solid var(--line-soft);transition:background .2s}
+.sig:last-child{border-bottom:none}
+.sig:hover{background:var(--panel-2)}
+.sig .st{font-weight:600;font-size:14.5px;color:var(--steel);line-height:1.35}
+.sig:hover .st{color:var(--plume)}
+.sig .sm{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--faint);white-space:nowrap;text-transform:uppercase}
+.hfine{margin-top:14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--faint);line-height:1.7}
+@media(max-width:980px){.hold{grid-template-columns:1fr}}
+
+/* ---------- manifest ---------- */
+.manifest{border-top:1px solid var(--line);background:linear-gradient(to bottom,var(--void),var(--sky-mid));padding:110px 0;position:relative}
+.manifest::before{content:"";position:absolute;top:-1px;left:0;right:0;height:2px;background:var(--heat);opacity:.85}
+.man-in{max-width:640px;margin:0 auto;padding:0 24px;text-align:center}
+.man-title{font-family:var(--disp);font-weight:800;font-size:clamp(40px,6vw,68px);text-transform:uppercase;line-height:.95;margin:16px 0 14px}
+.man-sub{color:var(--dim);font-size:15px;margin-bottom:34px}
+.man-form{display:flex;gap:10px}
+.man-form input[type=email]{flex:1;min-width:0;background:var(--panel);border:1px solid var(--line);color:var(--steel);font-family:var(--mono);font-size:14px;padding:14px 16px;letter-spacing:.03em}
+.man-form input::placeholder{color:var(--faint)}
+.man-form input[type=email]:focus{outline:none;border-color:var(--plume)}
+.man-btn{background:var(--plume);color:#0A0D15;border:1px solid var(--plume);font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;padding:14px 24px;cursor:pointer;transition:background .2s,color .2s}
+.man-btn:hover{background:transparent;color:var(--plume)}
+.man-btn[disabled]{opacity:.5;cursor:wait}
+.man-status{margin-top:16px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--dim);min-height:18px}
+.man-status.ok{color:var(--go)}
+.man-status.err{color:#E06C5B}
+.hp{position:absolute;left:-9999px;opacity:0;height:0;width:0}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--panel)}
+.f-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px}
+.f-brand{font-family:var(--disp);font-weight:800;font-size:28px;text-transform:uppercase;letter-spacing:.04em}
+.f-brand span{background:var(--heat);-webkit-background-clip:text;background-clip:text;color:transparent}
+.f-made{color:var(--dim);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-top:20px}
+.f-made b{color:var(--steel);font-weight:500}
+.f-note{color:var(--faint);font-size:12.5px;margin-top:14px;max-width:420px;line-height:1.7}
+.f-h{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--faint);text-transform:uppercase;margin-bottom:14px}
+.f-l{display:grid;gap:9px}
+.f-l a{font-size:13.5px;color:var(--dim);transition:color .2s}
+.f-l a:hover{color:var(--plume)}
+.f-utc{margin-top:26px;font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.1em}
+
+/* ---------- responsive ---------- */
+@media(max-width:980px){
+  .ports{grid-template-columns:1fr}
+  .port.wide .port-body{grid-template-columns:1fr}
+  .port.wide .facts{grid-column:1;grid-row:auto;border-left:none;border-top:1px solid var(--line-soft);padding:16px 0 0}
+  .dest{grid-template-columns:1fr}
+  .films{grid-template-columns:1fr}
+  .gal{grid-template-columns:repeat(2,1fr)}
+  .f-grid{grid-template-columns:1fr;gap:32px}
+  .wrow{grid-template-columns:1fr auto}
+  .wrow .wimg{display:none}
+  .brow{grid-template-columns:minmax(150px,2fr) 1.1fr 92px}
+  .brow .bimg,.brow .c-hide,.brow .c-hide2{display:none}
+}
+@media(max-width:560px){
+  .sec{padding:80px 0}
+  .brow{grid-template-columns:1fr 84px;gap:10px}
+  .brow .c-pad{display:none}
+  .rrow{grid-template-columns:1fr 84px}
+  .rjet{display:none}
+  .gal{grid-template-columns:1fr}
+  .chip{min-width:100%}
+  .flstrip{grid-auto-columns:200px}
+  .man-form{flex-direction:column}
+  .whead{font-size:19px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv,.brow.r{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#">SPACEPORTS<span>.EARTH</span></a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#departures">Departures</a>
+      <a href="#flightlog">Flight Log</a>
+      <a href="#ports">The Ports</a>
+      <a href="#e2e">Earth ↔ Earth</a>
+      <a href="#beyond">Beyond</a>
+      <a href="#wire">The Wire</a>
+      <a href="#holdings">Holdings</a>
+      <a href="#film">Film</a>
+      <a href="#archive">Archive</a>
+      <a href="#manifest">Manifest</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="stars" id="stars" aria-hidden="true"></div>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+        <linearGradient id="plumegrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#FFD9A6"/><stop offset=".45" stop-color="#FF8A3D"/><stop offset="1" stop-color="#FF8A3D" stop-opacity="0"/>
+        </linearGradient>
+        <g id="ship-shape">
+          <path class="plume-f ship-plume" d="M-3 -3 L-30 0 L-3 3 Z" opacity="0"/>
+          <path class="ship-fill" d="M0 -5 H30 C38 -5 44 -2.6 47 0 C44 2.6 38 5 30 5 H0 C-1.6 5 -2.6 4 -2.6 2.6 V-2.6 C-2.6 -4 -1.6 -5 0 -5 Z"/>
+          <path class="ship-fill" d="M2 -5 L8 -10 L13 -5 Z M2 5 L8 10 L13 5 Z"/>
+          <path class="ship-fill" d="M34 -4.2 L38.5 -7.6 L41.5 -4 Z M34 4.2 L38.5 7.6 L41.5 4 Z"/>
+          <path class="ship-line" d="M30 -5 C33 -3 33 3 30 5 M14 -5 V5"/>
+          <circle class="ship-win" cx="41" cy="-1.6" r="1.1"/>
+        </g>
+      </defs></svg>
+
+
+  <div class="hero-in">
+    <span class="kicker rv d1"><b>SPACEPORTS.EARTH</b> — INDEPENDENT GUIDE TO THE PLANETARY DEPARTURE NETWORK</span>
+    <h1 class="wordmark rv d2">Spaceports<span class="earth">.Earth</span></h1>
+    <p class="hero-sub rv d3">Every pad, every window, every destination. Live departures from Earth's launch sites, the ports of the Starship era, city-to-city rocket routes, and the road to the Moon and Mars — in one place.</p>
+    <div class="hero-strip rv d4">
+      <div class="chip">
+        <div class="lbl">Next departure · T-minus</div>
+        <div class="val mono" id="cd">--:--:--:--</div>
+        <div class="sub" id="cd-sub">Acquiring signal…</div>
+      </div>
+      <div class="chip">
+        <div class="lbl">Coordinated universal time</div>
+        <div class="val mono" id="utc">--:--:--</div>
+        <div class="sub">All ports run on UTC</div>
+      </div>
+      <div class="chip">
+        <div class="lbl">Network</div>
+        <div class="val mono">4 <em>ACTIVE</em> PORTS</div>
+        <div class="sub">+ offshore &amp; point-to-point concepts</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DEPARTURES ================= -->
+<section class="sec" id="departures">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2 class="sec-title">Departures</h2>
+      <span class="kicker">SEC 01 · LIVE BOARD</span>
+    </div>
+    <p class="sec-note rv">Upcoming launches worldwide, updated live. Times are UTC and shift often — a spaceport board is never final until the clock hits zero.</p>
+    <div class="board-tools rv">
+      <button class="fbtn on" data-f="all" type="button">All traffic</button>
+      <button class="fbtn" data-f="spacex" type="button">SpaceX only</button>
+    </div>
+    <div class="board rv" id="board" aria-live="polite">
+      <div class="brow head">
+        <span class="c-hide"></span><span>Mission</span><span class="c-hide2">Vehicle · Operator</span><span>Port</span><span class="c-hide">Window opens (UTC)</span><span style="justify-self:end">Status</span>
+      </div>
+      <div class="board-msg" id="board-msg">ACQUIRING SIGNAL — LOADING UPCOMING DEPARTURES…</div>
+    </div>
+    <p class="board-credit rv">Departure data: <a href="https://thespacedevs.com" rel="noopener">Launch Library 2 · The Space Devs</a>. Independent, community-maintained.</p>
+  </div>
+</section>
+
+<!-- ================= FLIGHT LOG ================= -->
+<section class="sec" id="flightlog">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2 class="sec-title">Flight Log</h2>
+      <span class="kicker">SEC 02 · STARSHIP TEST PROGRAM</span>
+    </div>
+    <p class="sec-note rv">Every Starship flight on record — hops, integrated tests and operational missions — pulled live from the launch library the moment a new one flies. Newest on the left; scroll the strip for the whole program.</p>
+    <figure class="sec-banner rv"><img src="reentry.jpg" alt="Starship during atmospheric reentry over night-side Earth — AI concept" loading="lazy"><figcaption>Reentry interface · AI concept</figcaption></figure>
+    <div class="hero-strip rv" style="margin:0 0 22px">
+      <div class="chip"><div class="lbl">Flights logged</div><div class="val mono" id="fl-count">--</div><div class="sub">Live program count</div></div>
+      <div class="chip"><div class="lbl">Latest outcome</div><div class="val mono" id="fl-last">--</div><div class="sub" id="fl-lastsub">Acquiring…</div></div>
+      <div class="chip"><div class="lbl">Next flight</div><div class="val mono" id="fl-next">--</div><div class="sub" id="fl-nextsub">Acquiring…</div></div>
+    </div>
+    <div class="flstrip rv" id="flstrip" aria-live="polite">
+      <div class="wire-msg">ACQUIRING SIGNAL — LOADING FLIGHT RECORDS…</div>
+    </div>
+    <p class="board-credit rv">Flight records: <a href="https://thespacedevs.com" rel="noopener">Launch Library 2 · The Space Devs</a>.</p>
+  </div>
+</section>
+
+<!-- ================= THE PORTS ================= -->
+<section class="sec" id="ports">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2 class="sec-title">The Ports</h2>
+      <span class="kicker">SEC 03 · GROUND INFRASTRUCTURE</span>
+    </div>
+    <p class="sec-note rv">The working spaceports of the SpaceX fleet today — and the ports being planned for tomorrow. Watch the network breathe: every active pad pings the planet, and the cities light up as the echo reaches them.</p>
+
+    <div class="portmap rv" id="portmap" role="img" aria-label="World map with SpaceX launch sites pinging destination cities">
+      <div class="pm-zoom" id="pmzoom">
+        <img class="pm-img" src="https://unpkg.com/three-globe@2.31.0/example/img/earth-night.jpg" alt="" crossorigin="anonymous">
+        <svg class="pm-svg" id="pmsvg" viewBox="0 0 1024 512" preserveAspectRatio="none"></svg>
+      </div>
+      <div class="pm-hud"><span>GROUND NETWORK · LIVE ECHO</span><span id="pm-ping">—</span></div>
+    </div>
+
+    <div class="ports">
+      <!-- STARBASE -->
+      <article class="port rv">
+        <div class="port-art">
+          <img class="port-photo" src="starbase-pad.jpg" alt="Starship and Super Heavy stacked on the launch mount at sunset — AI concept render" loading="lazy">
+          <div class="port-artcap">FULL STACK AT DUSK · AI RENDER</div>
+        </div>
+        <div class="port-body">
+          <h3 class="port-name">Starbase</h3>
+          <div class="port-loc">Boca Chica · Texas · Gulf Coast</div>
+          <p class="port-desc">The first purpose-built Starship spaceport — factory, test site and launch complex in one, where the tower's arms are designed to catch returning boosters out of the sky.</p>
+          <div class="facts">
+            <div class="fact"><div class="fl">Coordinates</div><div class="fv">25.997°N · 97.155°W</div></div>
+            <div class="fact"><div class="fl">Vehicle</div><div class="fv">Starship / Super Heavy</div></div>
+            <div class="fact"><div class="fl">Role</div><div class="fv">Build · Test · Launch</div></div>
+            <div class="fact"><div class="fl">Status</div><div class="fv">Active flight test</div></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- LC-39A -->
+      <article class="port rv">
+        <div class="port-art">
+          <img class="port-photo" src="https://images-assets.nasa.gov/image/NHQ202210010005/NHQ202210010005~medium.jpg" alt="Falcon 9 and Crew Dragon rolling out to Launch Complex 39A" loading="lazy">
+          <div class="port-artcap">CREW-5 ROLLOUT TO 39A · PHOTO: NASA</div>
+        </div>
+        <div class="port-body">
+          <h3 class="port-name">Launch Complex 39A</h3>
+          <div class="port-loc">Kennedy Space Center · Florida</div>
+          <p class="port-desc">The most storied pad on Earth: Apollo 11 and the Shuttle left from here, and today it hosts Falcon crew flights — with a Starship tower rising alongside.</p>
+          <div class="facts">
+            <div class="fact"><div class="fl">Coordinates</div><div class="fv">28.608°N · 80.604°W</div></div>
+            <div class="fact"><div class="fl">Vehicles</div><div class="fv">Falcon 9 · Falcon Heavy</div></div>
+            <div class="fact"><div class="fl">Role</div><div class="fv">Crew · Cargo · Heavy lift</div></div>
+            <div class="fact"><div class="fl">Heritage</div><div class="fv">Apollo · Shuttle era</div></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- SLC-40 -->
+      <article class="port rv">
+        <div class="port-art">
+          <img class="port-photo" src="https://images-assets.nasa.gov/image/KSC-20181205-PH_KLS01_0093/KSC-20181205-PH_KLS01_0093~medium.jpg" alt="Falcon 9 lifting off from Space Launch Complex 40" loading="lazy">
+          <div class="port-artcap">CRS-16 LIFTOFF FROM SLC-40 · PHOTO: NASA</div>
+        </div>
+        <div class="port-body">
+          <h3 class="port-name">SLC-40 · Cape Canaveral</h3>
+          <div class="port-loc">Space Force Station · Florida</div>
+          <p class="port-desc">The workhorse. The highest-tempo orbital pad in history, turning Falcon 9 missions around in days — the closest thing yet to airline operations for rockets.</p>
+          <div class="facts">
+            <div class="fact"><div class="fl">Coordinates</div><div class="fv">28.562°N · 80.577°W</div></div>
+            <div class="fact"><div class="fl">Vehicle</div><div class="fv">Falcon 9</div></div>
+            <div class="fact"><div class="fl">Role</div><div class="fv">High-cadence · Crew capable</div></div>
+            <div class="fact"><div class="fl">Signature</div><div class="fv">Fastest pad turnaround</div></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- SLC-4E -->
+      <article class="port rv">
+        <div class="port-art">
+          <img class="port-photo" src="https://images-assets.nasa.gov/image/NHQ202111230019/NHQ202111230019~medium.jpg" alt="Falcon 9 vertical at Vandenberg's SLC-4E before the DART launch" loading="lazy">
+          <div class="port-artcap">DART ON PAD, SLC-4E · PHOTO: NASA</div>
+        </div>
+        <div class="port-body">
+          <h3 class="port-name">SLC-4E · Vandenberg</h3>
+          <div class="port-loc">Space Force Base · California</div>
+          <p class="port-desc">The West Coast gateway. Launches thread south over open Pacific into polar and sun-synchronous orbits — the routes that map, watch and connect the whole planet.</p>
+          <div class="facts">
+            <div class="fact"><div class="fl">Coordinates</div><div class="fv">34.632°N · 120.611°W</div></div>
+            <div class="fact"><div class="fl">Vehicle</div><div class="fv">Falcon 9</div></div>
+            <div class="fact"><div class="fl">Role</div><div class="fv">Polar · Sun-synchronous</div></div>
+            <div class="fact"><div class="fl">Range</div><div class="fv">Pacific · southbound</div></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- FUTURE -->
+      <article class="port wide rv">
+        <div class="port-art">
+          <img class="port-photo" src="seaport-concept.jpg" alt="AI concept: offshore sea-rig spaceport staging four Starships, city skyline beyond" loading="lazy">
+          <div class="port-artcap">SEA-RIG STAGING, HARBOR APPROACH · AI CONCEPT ART</div>
+        </div>
+        <div class="port-body">
+          <div>
+            <h3 class="port-name">The Next Ports</h3>
+            <div class="port-loc">Offshore · International · Point-to-point</div>
+            <p class="port-desc">Starship's future is more pads, not just bigger ones: a second tower and Gigabay at Starbase, Starship pads on the Cape, and studied concepts for sea-based platforms parked off major cities — the departure lounges of Earth-to-Earth travel. Every one of them will be tracked here as it breaks ground.</p>
+          </div>
+          <div class="facts">
+            <div class="fact"><div class="fl">Starbase Pad B</div><div class="fv">Active — flying</div></div>
+            <div class="fact"><div class="fl">KSC LC-39A</div><div class="fv">Starship tower rising</div></div>
+            <div class="fact"><div class="fl">Cape SLC-37</div><div class="fv">Starship pad in work</div></div>
+            <div class="fact"><div class="fl">Ocean platforms</div><div class="fv">Concept · studied</div></div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EARTH TO EARTH ================= -->
+<section class="sec" id="e2e">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2 class="sec-title">Earth ↔ Earth</h2>
+      <span class="kicker">SEC 04 · POINT-TO-POINT</span>
+    </div>
+    <p class="sec-note rv">The most radical spaceport idea isn't about leaving Earth at all: Starship flying city to city on suborbital arcs, most of the trip spent coasting above the atmosphere. Concept flight times below are from SpaceX's 2017 Earth-to-Earth study. The globe below is live — it draws the real day/night line for this exact moment from the Sun's position. Drag to spin it; hover a route to trace the arc.</p>
+
+    <div class="e2e">
+      <figure class="sec-banner rv"><img src="starship-coast.jpg" alt="Starship in atmospheric flight above a coastline — AI concept" loading="lazy"><figcaption>Suborbital leg, feet dry · AI concept</figcaption></figure>
+
+      <div class="globe-wrap rv" id="globewrap">
+        <canvas id="globe" aria-label="Interactive Earth globe with live day and night and concept routes"></canvas>
+        <div class="globe-hud"><span class="sunlive" id="sunspot">SUBSOLAR — CALCULATING…</span><span>DRAG TO SPIN · LIVE TERMINATOR</span></div>
+      </div>
+
+      <div class="routemap rv" id="flatmap">
+        <svg viewBox="0 0 1000 520" role="img" aria-label="Diagram of concept city-to-city rocket routes">
+          <g class="grat">
+            <line x1="0" y1="100" x2="1000" y2="100"/><line x1="0" y1="200" x2="1000" y2="200"/>
+            <line x1="0" y1="250" x2="1000" y2="250" stroke-dasharray="3 6"/>
+            <line x1="0" y1="300" x2="1000" y2="300"/><line x1="0" y1="400" x2="1000" y2="400"/>
+            <line x1="100" y1="0" x2="100" y2="500"/><line x1="200" y1="0" x2="200" y2="500"/><line x1="300" y1="0" x2="300" y2="500"/><line x1="400" y1="0" x2="400" y2="500"/><line x1="500" y1="0" x2="500" y2="500"/><line x1="600" y1="0" x2="600" y2="500"/><line x1="700" y1="0" x2="700" y2="500"/><line x1="800" y1="0" x2="800" y2="500"/><line x1="900" y1="0" x2="900" y2="500"/>
+          </g>
+          <path id="arc-r1" class="arc" d="M294 137 Q565 55 837 163"/>
+          <path id="arc-r2" class="arc" d="M500 107 Q397 74 294 137"/>
+          <path id="arc-r3" class="arc" d="M172 155 Q226 110 280 129"/>
+          <path id="arc-r4" class="arc" d="M920 344 Q854 252 788 246"/>
+          <path id="arc-r5" class="arc" d="M779 212 Q716 162 653 180"/>
+          <g>
+            <circle class="city" cx="172" cy="155" r="3.5"/><text class="citylbl" x="150" y="174">LOS ANGELES</text>
+            <circle class="city" cx="280" cy="129" r="3.5"/><text class="citylbl" x="255" y="119">TORONTO</text>
+            <circle class="city" cx="294" cy="137" r="3.5"/><text class="citylbl" x="286" y="157">NEW YORK</text>
+            <circle class="city" cx="500" cy="107" r="3.5"/><text class="citylbl" x="478" y="97">LONDON</text>
+            <circle class="city" cx="653" cy="180" r="3.5"/><text class="citylbl" x="633" y="200">DUBAI</text>
+            <circle class="city" cx="779" cy="212" r="3.5"/><text class="citylbl" x="713" y="216">BANGKOK</text>
+            <circle class="city" cx="788" cy="246" r="3.5"/><text class="citylbl" x="800" y="252">SINGAPORE</text>
+            <circle class="city" cx="837" cy="163" r="3.5"/><text class="citylbl" x="848" y="168">SHANGHAI</text>
+            <circle class="city" cx="920" cy="344" r="3.5"/><text class="citylbl" x="893" y="364">SYDNEY</text>
+          </g>
+          <text x="14" y="514" class="dglabel">DIAGRAMMATIC · GREAT-CIRCLE ROUTES SIMPLIFIED · TIMES = 2017 CONCEPT STUDY</text>
+        </svg>
+      </div>
+
+      <div class="rtable rv">
+        <div class="rrow head"><span>Route</span><span>By Starship</span><span style="justify-self:end">By airliner</span></div>
+        <div class="rrow" data-r="r1" tabindex="0"><span class="rpair">New York<i>→</i>Shanghai</span><span class="rmin">39 <small>MIN</small></span><span class="rjet">~15 H</span></div>
+        <div class="rrow" data-r="r2" tabindex="0"><span class="rpair">London<i>→</i>New York</span><span class="rmin">29 <small>MIN</small></span><span class="rjet">~8 H</span></div>
+        <div class="rrow" data-r="r3" tabindex="0"><span class="rpair">L.A.<i>→</i>Toronto</span><span class="rmin">24 <small>MIN</small></span><span class="rjet">~4.5 H</span></div>
+        <div class="rrow" data-r="r4" tabindex="0"><span class="rpair">Sydney<i>→</i>Singapore</span><span class="rmin">31 <small>MIN</small></span><span class="rjet">~8 H</span></div>
+        <div class="rrow" data-r="r5" tabindex="0"><span class="rpair">Bangkok<i>→</i>Dubai</span><span class="rmin">27 <small>MIN</small></span><span class="rjet">~6.5 H</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BEYOND ================= -->
+<section class="sec" id="beyond">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2 class="sec-title">Beyond</h2>
+      <span class="kicker">SEC 05 · DESTINATIONS</span>
+    </div>
+    <p class="sec-note rv">Where the departure board points next. Three destinations, three very different trips.</p>
+    <div class="dest">
+      <article class="dcard rv">
+        <div class="orbit-scene s-leo" aria-hidden="true">
+          <img class="obg" src="orbit-starship.jpg" alt="" loading="lazy">
+          
+          <div class="ocap">STARSHIP ON ORBIT · AI CONCEPT</div>
+        </div>
+        <div class="dnum">DEST 01 · 400 KM UP</div>
+        <h3 class="dname">Orbit</h3>
+        <p class="ddesc">Eight and a half minutes to weightlessness. Crew Dragon already flies private missions; commercial stations are next in line to replace the ISS.</p>
+        <div class="dstats">
+          <div class="ds"><span>Altitude</span><b>~400 km · LEO</b></div>
+          <div class="ds"><span>Ascent</span><b>~9 min to orbit</b></div>
+          <div class="ds"><span>Vehicles</span><b>Dragon · Starship</b></div>
+          <div class="ds"><span>Now</span><b>Private crews flying</b></div>
+        </div>
+      </article>
+      <article class="dcard rv">
+        <div class="orbit-scene s-tli" aria-hidden="true">
+          <img class="mini-earth" src="https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57723/globe_west_2048.jpg" alt="" loading="lazy">
+          <img class="mini-moon" src="https://images-assets.nasa.gov/image/PIA00405/PIA00405~medium.jpg" alt="" loading="lazy">
+          <svg class="oflight" viewBox="0 0 360 180" preserveAspectRatio="none">
+            <path class="tli-track" d="M56 142 Q170 128 292 52" fill="none"/>
+            <path id="bpath2" d="M56 142 Q170 128 292 52" fill="none" stroke="none"/>
+            <g class="pship" data-follow="#bpath2" data-dur="11" data-scale=".5" opacity="0"><image href="ship-cruise.png" width="78" height="44" x="-39" y="-22"/></g>
+          </svg>
+          <div class="ocap">TRANS-LUNAR COAST · 3 DAYS OUT</div>
+        </div>
+        <div class="dnum">DEST 02 · 384,400 KM</div>
+        <h3 class="dname">The Moon</h3>
+        <p class="ddesc">Three days out. A Starship variant is NASA's Artemis lander, built to set the next crew — the first in over fifty years — onto the lunar surface.</p>
+        <div class="dstats">
+          <div class="ds"><span>Distance</span><b>384,400 km avg</b></div>
+          <div class="ds"><span>Transit</span><b>~3 days</b></div>
+          <div class="ds"><span>Vehicle</span><b>Starship HLS</b></div>
+          <div class="ds"><span>Program</span><b>NASA Artemis</b></div>
+        </div>
+      </article>
+      <article class="dcard rv">
+        <div class="orbit-scene s-mars" aria-hidden="true">
+          <img class="big-mars" src="https://images-assets.nasa.gov/image/PIA00407/PIA00407~medium.jpg" alt="" loading="lazy">
+          <svg class="oflight" viewBox="0 0 360 180" preserveAspectRatio="none">
+            <path id="bpath3" d="M-36 44 C90 30 190 52 268 84" fill="none" stroke="none"/>
+            <g class="pship" data-follow="#bpath3" data-dur="12" data-scale=".55" opacity="0"><image href="ship-burn.png" width="82" height="47" x="-41" y="-23.5"/></g>
+          </svg>
+          <div class="ocap">MARS APPROACH · CAPTURE BURN SOON</div>
+        </div>
+        <div class="dnum">DEST 03 · 26-MONTH WINDOWS</div>
+        <h3 class="dname">Mars</h3>
+        <p class="ddesc">The reason Starship exists. The planets align for a crossing roughly every 26 months — uncrewed cargo ships go first, people follow.</p>
+        <div class="dstats">
+          <div class="ds"><span>Distance</span><b>55–400M km</b></div>
+          <div class="ds"><span>Transit</span><b>~6–9 months</b></div>
+          <div class="ds"><span>Window</span><b>Every ~26 months</b></div>
+          <div class="ds"><span>Vehicle</span><b>Starship</b></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= THE WIRE ================= -->
+<section class="sec" id="wire">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2 class="sec-title">The Wire</h2>
+      <span class="kicker">SEC 06 · SIGNAL INTERCEPTS</span>
+    </div>
+    <p class="sec-note rv">Space-travel headlines from across the industry press, pulled live. Tune the band; every story links out to its source.</p>
+    <div class="gal-tools wire-tools rv">
+      <button class="fbtn on" data-w="spacex" type="button">SpaceX</button>
+      <button class="fbtn" data-w="starship" type="button">Starship</button>
+      <button class="fbtn" data-w="starlink" type="button">Starlink</button>
+      <button class="fbtn" data-w="artemis" type="button">Artemis</button>
+      <button class="fbtn" data-w="" type="button">All space news</button>
+    </div>
+    <div class="wire rv" id="wirebox" aria-live="polite">
+      <div class="wire-msg">SCANNING FREQUENCIES…</div>
+    </div>
+    <p class="board-credit rv">Headlines: <a href="https://spaceflightnewsapi.net" rel="noopener">Spaceflight News API</a> · stories © their publishers.</p>
+  </div>
+</section>
+
+<!-- ================= HOLDINGS ================= -->
+<section class="sec" id="holdings">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2 class="sec-title">Holdings</h2>
+      <span class="kicker">SEC 07 · THE PUBLIC STACK</span>
+    </div>
+    <p class="sec-note rv">One ticker now holds the departure network. SpaceX folded xAI in, then went public in the biggest IPO on record — launch, Starlink and Grok all trade together. What's inside, and where to watch it.</p>
+
+    <div class="hold">
+      <article class="htile rv">
+        <div class="htick">NASDAQ · SPCX</div>
+        <h3 class="hname">SpaceX</h3>
+        <p class="hdesc">The whole stack in one listing since June 2026 — Space Exploration Technologies Corp., spanning launch, connectivity and AI.</p>
+        <div class="hstats">
+          <div class="ds"><span>IPO</span><b>Jun 12 2026 · $135</b></div>
+          <div class="ds"><span>Raised</span><b>~$75B — largest ever</b></div>
+          <div class="ds"><span>Day-one peak</span><b>&gt;$2.1T market cap</b></div>
+          <div class="ds"><span>Segments</span><b>Launch · Starlink · AI</b></div>
+        </div>
+        <div class="hlinks"><a href="https://www.google.com/finance/quote/SPCX:NASDAQ" rel="noopener" target="_blank">Live quote ↗</a><a href="https://www.nasdaq.com/market-activity/stocks/spcx" rel="noopener" target="_blank">Nasdaq page ↗</a></div>
+      </article>
+
+      <article class="htile rv">
+        <div class="htick">Inside SPCX · Connectivity</div>
+        <h3 class="hname">Starlink</h3>
+        <p class="hdesc">No separate ticker — the constellation is SpaceX's connectivity segment and its biggest revenue engine, from home broadband to direct-to-cell.</p>
+        <div class="hstats">
+          <div class="ds"><span>Constellation</span><b>≈8,000+ active sats (est.)</b></div>
+          <div class="ds"><span>Role</span><b>Majority of revenue</b></div>
+          <div class="ds"><span>Reach</span><b>100+ markets · D2C live</b></div>
+          <div class="ds"><span>Listing</span><b>None — rides with SPCX</b></div>
+        </div>
+        <div class="hlinks"><a href="https://www.starlink.com" rel="noopener" target="_blank">starlink.com ↗</a></div>
+      </article>
+
+      <article class="htile rv">
+        <div class="htick">Inside SPCX · AI</div>
+        <h3 class="hname">xAI</h3>
+        <p class="hdesc">Merged into SpaceX ahead of the IPO in a deal reported at $250B for xAI — bringing Grok and the Colossus clusters onto the same balance sheet as the rockets.</p>
+        <div class="hstats">
+          <div class="ds"><span>Status</span><b>Merged pre-IPO</b></div>
+          <div class="ds"><span>Deal value</span><b>$250B (reported)</b></div>
+          <div class="ds"><span>Products</span><b>Grok · Colossus</b></div>
+          <div class="ds"><span>Next</span><b>Orbital AI DCs w/ Nvidia</b></div>
+        </div>
+        <div class="hlinks"><a href="https://x.ai" rel="noopener" target="_blank">x.ai ↗</a></div>
+      </article>
+    </div>
+
+    <div class="sigfeed rv">
+      <div class="sighead">Market signals — live</div>
+      <div id="sigbox"><div class="wire-msg">SCANNING…</div></div>
+    </div>
+    <p class="hfine rv">Figures as reported by press, Aug 2026 — markets move fast; use the live quote for now-numbers. This is information, not investment advice. Sources: CNBC, Reuters/Bloomberg, Nasdaq.</p>
+  </div>
+</section>
+
+<!-- ================= FILM ================= -->
+<section class="sec" id="film">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2 class="sec-title">Film</h2>
+      <span class="kicker">SEC 08 · MISSION FOOTAGE</span>
+    </div>
+    <p class="sec-note rv">Launches, landings, catches and flight tests — streamed straight from the official channels, always the latest uploads.</p>
+    <div class="films">
+      <div class="film rv">
+        <div class="ratio"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list=UUtI0Hodo5o5dUb67FeUjDeA" title="SpaceX — latest uploads" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+        <div class="film-cap"><b>SpaceX</b><span>Official channel · latest</span></div>
+      </div>
+      <div class="film rv">
+        <div class="ratio"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list=UULA_DiR1FfKNvjuUpBHmylQ" title="NASA — latest uploads" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+        <div class="film-cap"><b>NASA</b><span>Official channel · latest</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ARCHIVE ================= -->
+<section class="sec" id="archive">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2 class="sec-title">Archive</h2>
+      <span class="kicker">SEC 09 · IMAGE LIBRARY</span>
+    </div>
+    <p class="sec-note rv">Pulled live from the NASA Image and Video Library — public-domain photography of the machines, the pads and the planet they leave behind. Pick a frequency.</p>
+    <div class="gal-tools rv">
+      <button class="fbtn on" data-q="spacex starship" type="button">Starship</button>
+      <button class="fbtn" data-q="spacex falcon 9 launch" type="button">Falcon</button>
+      <button class="fbtn" data-q="launch pad 39A" type="button">Launch pads</button>
+      <button class="fbtn" data-q="earth from space station" type="button">Earth</button>
+    </div>
+    <div class="gal rv" id="gal" aria-live="polite">
+      <div class="gal-msg">TUNING RECEIVER — LOADING IMAGERY…</div>
+    </div>
+    <p class="board-credit rv">Imagery: <a href="https://images.nasa.gov" rel="noopener">NASA Image and Video Library</a> · public domain.</p>
+  </div>
+</section>
+
+<!-- ================= MANIFEST ================= -->
+<section class="manifest" id="manifest">
+  <div class="man-in rv">
+    <span class="kicker"><b>FINAL CALL</b> · THE MANIFEST</span>
+    <h2 class="man-title">Get on the list</h2>
+    <p class="man-sub">Occasional dispatches when a new port breaks ground, a window opens, or the board changes in a big way. No noise — step off anytime.</p>
+    <form class="man-form" id="manform" novalidate>
+      <input type="email" name="email" id="man-email" placeholder="you@earth.example" autocomplete="email" required aria-label="Email address">
+      <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button class="man-btn" type="submit" id="man-btn">Join</button>
+    </form>
+    <div class="man-status" id="man-status" role="status"></div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap f-grid">
+    <div>
+      <div class="f-brand">Spaceports<span>.Earth</span></div>
+      <p class="f-made">Created by <b>Mario E. Delgado</b> — one of the biggest supporters and fans of interplanetary travel and space exploration.</p>
+      <p class="f-note">An independent reference site. Not affiliated with, sponsored by, or endorsed by SpaceX or NASA. SpaceX, Falcon, Starship and Dragon are trademarks of Space Exploration Technologies Corp. Launch data via The Space Devs; imagery and planet textures via NASA's public-domain library; concept art AI-generated for this site. Nothing on this site is investment advice.</p>
+      <div class="f-utc" id="utc2">UTC --:--:--</div>
+    </div>
+    <div>
+      <div class="f-h">Terminal</div>
+      <div class="f-l">
+        <a href="#departures">Departures board</a>
+        <a href="#flightlog">Starship flight log</a>
+        <a href="#ports">The ports</a>
+        <a href="#e2e">Earth ↔ Earth routes</a>
+        <a href="#beyond">Destinations</a>
+        <a href="#wire">The wire</a>
+        <a href="#holdings">Holdings &amp; the stock</a>
+        <a href="#manifest">Join the manifest</a>
+      </div>
+    </div>
+    <div>
+      <div class="f-h">Ground truth</div>
+      <div class="f-l">
+        <a href="https://www.spacex.com" rel="noopener">SpaceX — official</a>
+        <a href="https://www.nasa.gov" rel="noopener">NASA — official</a>
+        <a href="https://thespacedevs.com" rel="noopener">The Space Devs — launch data</a>
+        <a href="https://www.faa.gov/space" rel="noopener">FAA — commercial space</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+var $=function(s,c){return (c||document).querySelector(s)};
+var $$=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
+var esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(m){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]})};
+/* cached fetch: shields the live feeds from per-visitor API rate limits.
+   Fresh responses are stored in localStorage; repeat loads within the TTL
+   are served from cache, and if the network or the API's limiter fails,
+   the last good data is shown instead of an error. */
+function cachedFetch(u,opts){
+  var ttl = u.indexOf("thespacedevs")>-1?600000
+          : u.indexOf("spaceflightnews")>-1?300000
+          : u.indexOf("images-api.nasa")>-1?1800000 : 0;
+  if(!ttl) return fetch(u,opts);
+  var key="sfc:"+u, now=Date.now(), hit=null;
+  try{hit=JSON.parse(localStorage.getItem(key)||"null");}catch(e){}
+  function wrap(d){return {ok:true,json:function(){return Promise.resolve(d)}};}
+  if(hit&&(now-hit.t)<ttl) return Promise.resolve(wrap(hit.d));
+  return fetch(u,opts).then(function(r){
+    if(!r.ok) throw 0;
+    return r.json().then(function(d){
+      try{localStorage.setItem(key,JSON.stringify({t:now,d:d}));}catch(e){}
+      return wrap(d);
+    });
+  }).catch(function(e){ if(hit) return wrap(hit.d); throw e; });
+}
+
+/* ---- starfield (upper sky only, sparse) ---- */
+(function(){
+  var box=$("#stars"); if(!box) return;
+  var n=window.innerWidth<600?36:70, html="";
+  for(var i=0;i<n;i++){
+    var x=Math.random()*100, y=Math.random()*100, s=(Math.random()*1.6+.8).toFixed(1), d=(Math.random()*4).toFixed(2);
+    html+='<i style="left:'+x+'%;top:'+y+'%;width:'+s+'px;height:'+s+'px;animation-delay:'+d+'s"></i>';
+  }
+  box.innerHTML=html;
+})();
+
+/* ---- scroll reveal ---- */
+(function(){
+  var els=$$(".rv");
+  if(!("IntersectionObserver" in window)){els.forEach(function(e){e.classList.add("in")});return;}
+  var io=new IntersectionObserver(function(en){
+    en.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target);}});
+  },{threshold:.12});
+  els.forEach(function(e){io.observe(e)});
+})();
+
+/* ---- UTC clock ---- */
+(function(){
+  var a=$("#utc"), b=$("#utc2");
+  function tick(){
+    var d=new Date();
+    var t=[d.getUTCHours(),d.getUTCMinutes(),d.getUTCSeconds()].map(function(v){return String(v).padStart(2,"0")}).join(":");
+    if(a)a.textContent=t; if(b)b.textContent="UTC "+t;
+  }
+  tick(); setInterval(tick,1000);
+})();
+
+/* ---- departures board + countdown ---- */
+var LAUNCHES=[], FILTER="all", CD_TARGET=null;
+
+function fmtWindow(iso){
+  var d=new Date(iso);
+  if(isNaN(d)) return "TBD";
+  var M=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"][d.getUTCMonth()];
+  var p=function(v){return String(v).padStart(2,"0")};
+  return M+" "+p(d.getUTCDate())+" · "+p(d.getUTCHours())+":"+p(d.getUTCMinutes())+" UTC";
+}
+function splitName(l){
+  var parts=(l.name||"").split("|");
+  return {vehicle:(parts[0]||"").trim(), mission:(l.mission||parts[1]||parts[0]||"Mission").toString().trim()};
+}
+function statusClass(ab){
+  ab=(ab||"").toLowerCase();
+  if(ab==="go") return "go";
+  if(ab==="tbc"||ab==="tbd") return "tbd";
+  return "";
+}
+function renderBoard(){
+  var board=$("#board"); if(!board) return;
+  $$(".brow.r",board).forEach(function(r){r.remove()});
+  var msg=$("#board-msg");
+  var rows=LAUNCHES.filter(function(l){
+    return FILTER==="all" || ((l.lsp_name||"").toLowerCase().indexOf("spacex")>-1);
+  }).slice(0,9);
+  if(!rows.length){ if(msg){msg.style.display="block"; msg.innerHTML="NO DEPARTURES IN THIS FILTER — <a href='#' data-f-reset>show all traffic</a>";} return; }
+  if(msg) msg.style.display="none";
+  rows.forEach(function(l,i){
+    var nm=splitName(l), spx=(l.lsp_name||"").toLowerCase().indexOf("spacex")>-1;
+    var row=document.createElement("div");
+    row.className="brow r";
+    row.innerHTML=
+      (l.image?'<img class="bimg" src="'+esc(l.image)+'" alt="" loading="lazy">':'<span class="bimg" aria-hidden="true"></span>')+
+      '<div class="bmission">'+esc(nm.mission)+'<small>'+(spx?'<span class="spx-tag">SPACEX</span> · ':'')+esc(nm.vehicle)+"</small></div>"+
+      '<div class="bcell c-hide2"><b>'+esc(nm.vehicle)+"</b>"+esc(l.lsp_name||"")+"</div>"+
+      '<div class="bcell c-pad"><b>'+esc(l.pad||"Pad TBD")+"</b>"+esc(l.location||"")+"</div>"+
+      '<div class="bcell c-hide"><b>'+fmtWindow(l.net)+"</b>T-0 may shift</div>"+
+      '<span class="bstatus '+statusClass(l.status&&l.status.abbrev)+'">'+esc((l.status&&l.status.abbrev)||"—")+"</span>";
+    board.appendChild(row);
+    setTimeout(function(){row.classList.add("in")},60*i+40);
+  });
+}
+function startCountdown(){
+  var el=$("#cd"), sub=$("#cd-sub"); if(!el) return;
+  function tick(){
+    if(!CD_TARGET){el.textContent="OFFLINE"; return;}
+    var ms=CD_TARGET-Date.now();
+    if(ms<=0){el.innerHTML="<em>LIFTOFF</em>"; return;}
+    var s=Math.floor(ms/1000);
+    var d=Math.floor(s/86400), h=Math.floor(s%86400/3600), m=Math.floor(s%3600/60), sc=s%60;
+    var p=function(v){return String(v).padStart(2,"0")};
+    el.innerHTML="T-<em>"+p(d)+"</em>:"+p(h)+":"+p(m)+":"+p(sc);
+  }
+  tick(); setInterval(tick,1000);
+  if(sub&&LAUNCHES[0]){var nm=splitName(LAUNCHES[0]);sub.textContent=nm.mission+" — "+(LAUNCHES[0].location||LAUNCHES[0].pad||"");}
+}
+cachedFetch("https://ll.thespacedevs.com/2.2.0/launch/upcoming/?mode=list&limit=14")
+  .then(function(r){if(!r.ok)throw 0;return r.json()})
+  .then(function(j){
+    LAUNCHES=(j.results||[]).filter(function(l){return l&&l.net});
+    if(LAUNCHES.length){CD_TARGET=new Date(LAUNCHES[0].net).getTime();}
+    renderBoard(); startCountdown();
+  })
+  .catch(function(){
+    var msg=$("#board-msg");
+    if(msg) msg.innerHTML='TRAFFIC CONTROL BUSY — launch feed rate-limited; it resets within the hour. Check <a href="https://www.spacex.com/launches" rel="noopener">spacex.com/launches</a> or refresh in a minute.';
+    var el=$("#cd"), sub=$("#cd-sub");
+    if(el) el.textContent="NO SIGNAL";
+    if(sub) sub.textContent="Live feed unavailable";
+  });
+
+$$(".board-tools .fbtn").forEach(function(b){
+  b.addEventListener("click",function(){
+    $$(".board-tools .fbtn").forEach(function(x){x.classList.remove("on")});
+    b.classList.add("on"); FILTER=b.getAttribute("data-f"); renderBoard();
+  });
+});
+document.addEventListener("click",function(e){
+  if(e.target&&e.target.hasAttribute&&e.target.hasAttribute("data-f-reset")){
+    e.preventDefault(); FILTER="all";
+    $$(".board-tools .fbtn").forEach(function(x){x.classList.toggle("on",x.getAttribute("data-f")==="all")});
+    renderBoard();
+  }
+});
+
+/* ---- earth-to-earth route highlight ---- */
+$$(".rrow[data-r]").forEach(function(row){
+  var arc=document.getElementById("arc-"+row.getAttribute("data-r"));
+  var rid=row.getAttribute("data-r");
+  function on(){row.classList.add("hot"); if(arc)arc.classList.add("hot"); if(window.__routeHot)window.__routeHot(rid,true);}
+  function off(){row.classList.remove("hot"); if(arc)arc.classList.remove("hot"); if(window.__routeHot)window.__routeHot(rid,false);}
+  row.addEventListener("mouseenter",on); row.addEventListener("mouseleave",off);
+  row.addEventListener("focus",on); row.addEventListener("blur",off);
+  row.addEventListener("click",function(){ row.classList.contains("hot")?off():on(); });
+});
+
+/* ---- NASA public-domain gallery ---- */
+function loadGal(q){
+  var gal=$("#gal"); if(!gal) return;
+  gal.innerHTML='<div class="gal-msg">TUNING RECEIVER — LOADING IMAGERY…</div>';
+  cachedFetch("https://images-api.nasa.gov/search?media_type=image&page_size=24&q="+encodeURIComponent(q))
+    .then(function(r){if(!r.ok)throw 0;return r.json()})
+    .then(function(j){
+      var items=((j.collection||{}).items||[]).filter(function(it){
+        return it.links&&it.links[0]&&it.links[0].href&&it.data&&it.data[0];
+      }).slice(0,8);
+      if(!items.length){gal.innerHTML='<div class="gal-msg">NOTHING ON THIS FREQUENCY — try another band.</div>';return;}
+      gal.innerHTML=items.map(function(it){
+        var href=encodeURI(it.links[0].href.replace(/^http:/,"https:"));
+        var title=it.data[0].title||"NASA archive";
+        return '<figure class="gitem"><img src="'+esc(href)+'" alt="'+esc(title)+'" loading="lazy"><figcaption>'+esc(title)+"</figcaption></figure>";
+      }).join("");
+    })
+    .catch(function(){
+      gal.innerHTML='<div class="gal-msg">SIGNAL LOST — imagery feed unavailable. Browse directly at <a href="https://images.nasa.gov" rel="noopener" style="color:var(--plume)">images.nasa.gov</a>.</div>';
+    });
+}
+$$(".gal-tools .fbtn").forEach(function(b){
+  b.addEventListener("click",function(){
+    $$(".gal-tools .fbtn").forEach(function(x){x.classList.remove("on")});
+    b.classList.add("on"); loadGal(b.getAttribute("data-q"));
+  });
+});
+loadGal("spacex starship");
+
+/* ---- starship flight log ---- */
+(function(){
+  var strip=$("#flstrip"); if(!strip) return;
+  function fnum(nm){var m=/flight\s+(\d+)/i.exec(nm||"");if(m)return m[1];var s=/SN\s?(\d+)/i.exec(nm||"");if(s)return "SN"+s[1];return "FT";}
+  function pill(ab,up){if(up)return ["up","UPCOMING"];ab=(ab||"").toLowerCase();
+    if(ab.indexOf("partial")>-1)return ["part","PARTIAL"];
+    if(ab.indexOf("success")>-1)return ["ok","SUCCESS"];
+    if(ab.indexOf("fail")>-1)return ["bad","FAILURE"];
+    return ["",(ab||"—").toUpperCase()];}
+  function fdate(iso){var d=new Date(iso);if(isNaN(d))return "TBD";var M=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"][d.getUTCMonth()];return M+" "+String(d.getUTCDate()).padStart(2,"0")+" "+d.getUTCFullYear();}
+  function card(l,up){
+    var nm=splitName(l),st=pill(l.status&&l.status.abbrev,up);
+    return '<article class="flcard'+(up?" next":"")+'"><div class="flnum">'+esc(fnum(l.name))+'</div>'+
+      '<div class="flmiss">'+esc(nm.mission)+'</div>'+
+      '<div class="fldate">'+fdate(l.net)+'</div>'+
+      '<div class="flpad">'+esc(l.pad||"")+'</div>'+
+      '<span class="flpill '+st[0]+'">'+st[1]+'</span></article>';
+  }
+  Promise.all([
+    cachedFetch("https://ll.thespacedevs.com/2.2.0/launch/previous/?mode=list&limit=40&search=starship").then(function(r){if(!r.ok)throw 0;return r.json()}),
+    cachedFetch("https://ll.thespacedevs.com/2.2.0/launch/upcoming/?mode=list&limit=5&search=starship").then(function(r){return r.ok?r.json():{results:[]}}).catch(function(){return {results:[]}})
+  ]).then(function(res){
+    var past=(res[0].results||[]).filter(function(l){return l&&l.net&&(l.lsp_name||"")==="SpaceX"});
+    var next=((res[1].results||[]).filter(function(l){return l&&l.net&&(l.lsp_name||"")==="SpaceX"}))[0];
+    past.sort(function(a,b){return new Date(b.net)-new Date(a.net)});
+    var c=$("#fl-count"); if(c)c.textContent=String(past.length);
+    if(past[0]){var st=pill(past[0].status&&past[0].status.abbrev,false);
+      $("#fl-last").textContent=st[1];
+      $("#fl-lastsub").textContent=splitName(past[0]).mission+" · "+fdate(past[0].net);}
+    if(next){$("#fl-next").textContent=fdate(next.net);$("#fl-nextsub").textContent=splitName(next).mission+" — "+(next.pad||"");}
+    else{$("#fl-next").textContent="TBD";$("#fl-nextsub").textContent="No date on the board yet";}
+    var cards=[]; if(next)cards.push(card(next,true));
+    past.forEach(function(l){cards.push(card(l,false))});
+    strip.innerHTML=cards.length?cards.join(""):'<div class="wire-msg">NO RECORDS FOUND.</div>';
+  }).catch(function(){strip.innerHTML='<div class="wire-msg">TRAFFIC CONTROL BUSY — flight records rate-limited. The window resets within the hour; cached records show when available.</div>';});
+})();
+
+/* ---- the wire (live news) ---- */
+(function(){
+  var box=$("#wirebox"); if(!box) return;
+  function ago(iso){var s=(Date.now()-new Date(iso))/1000;if(!isFinite(s)||s<0)return "";var m=Math.floor(s/60),h=Math.floor(m/60),d=Math.floor(h/24);return d>0?d+"D AGO":h>0?h+"H AGO":m+"M AGO";}
+  function load(q){
+    box.innerHTML='<div class="wire-msg">SCANNING FREQUENCIES…</div>';
+    var u="https://api.spaceflightnewsapi.net/v4/articles/?limit=8"+(q?"&search="+encodeURIComponent(q):"");
+    cachedFetch(u).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){
+      var arts=(j.results||[]).slice(0,8);
+      if(!arts.length){box.innerHTML='<div class="wire-msg">NOTHING ON THIS BAND.</div>';return;}
+      box.innerHTML=arts.map(function(a){
+        return '<a class="wrow" href="'+esc(a.url)+'" target="_blank" rel="noopener">'+
+          (a.image_url?'<img class="wimg" src="'+esc(a.image_url)+'" alt="" loading="lazy">':'<span class="wimg" aria-hidden="true"></span>')+
+          '<span><span class="whead">'+esc(a.title)+'</span>'+
+          '<span class="wmeta"><b>'+esc(a.news_site||"")+'</b>'+(a.published_at?' · '+ago(a.published_at):'')+'</span>'+
+          '<span class="wsum">'+esc((a.summary||"").trim())+'</span></span>'+
+          '<span class="wgo">↗</span></a>';
+      }).join("");
+    }).catch(function(){box.innerHTML='<div class="wire-msg">SIGNAL LOST — news feed unavailable. Read direct at <a href="https://spacenews.com" rel="noopener">SpaceNews</a>.</div>';});
+  }
+  $$(".wire-tools .fbtn").forEach(function(b){
+    b.addEventListener("click",function(){
+      $$(".wire-tools .fbtn").forEach(function(x){x.classList.remove("on")});
+      b.classList.add("on"); load(b.getAttribute("data-w"));
+    });
+  });
+  load("spacex");
+})();
+
+/* ---- manifest signup ---- */
+(function(){
+  /* CONFIG — change this one line to your real inbox. First signup sends a
+     FormSubmit.co activation email to that address; click it once and the
+     list is live. No account needed. */
+  var SIGNUP_EMAIL="hello@spaceports.earth";
+  var f=$("#manform"); if(!f) return;
+  var btn=$("#man-btn"), st=$("#man-status"), em=$("#man-email");
+  f.addEventListener("submit",function(e){
+    e.preventDefault();
+    var v=(em.value||"").trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){st.className="man-status err";st.textContent="THAT ADDRESS DOESN'T PARSE — CHECK IT AND RETRY.";return;}
+    if(f.querySelector('[name="_honey"]').value){return;}
+    btn.disabled=true; st.className="man-status"; st.textContent="TRANSMITTING…";
+    fetch("https://formsubmit.co/ajax/"+SIGNUP_EMAIL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json",Accept:"application/json"},
+      body:JSON.stringify({email:v,_subject:"New manifest signup — spaceports.earth",_template:"table"})
+    })
+    .then(function(r){return r.json()})
+    .then(function(j){
+      if(j&&(j.success==="true"||j.success===true)){st.className="man-status ok";st.textContent="CONFIRMED — YOU'RE ON THE MANIFEST.";f.reset();}
+      else{throw 0;}
+    })
+    .catch(function(){st.className="man-status err";st.textContent="TRANSMISSION FAILED — SIGN-UPS AREN'T OPEN YET. TRY AGAIN SOON.";})
+    .finally(function(){btn.disabled=false;});
+  });
+})();
+
+/* ---- hero: launch / cruise / landing choreography ---- */
+(function(){
+  var path=document.getElementById("fpath"), ship=document.getElementById("heroship"), plume=document.getElementById("heroplume");
+  if(!path||!ship||!path.getTotalLength) return;
+  var fpA=document.getElementById("fp-a"), fpB=document.getElementById("fp-b"), fpT=document.getElementById("fp-t");
+  var reduced=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var AX=150, BX=1050, GY=332, LIFT=60;
+  var total=path.getTotalLength();
+  var routes=[["NEW YORK","SHANGHAI","39 MIN · SUBORBITAL"],
+              ["LONDON","NEW YORK","29 MIN · SUBORBITAL"],
+              ["SYDNEY","SINGAPORE","31 MIN · SUBORBITAL"],
+              ["LOS ANGELES","TORONTO","24 MIN · SUBORBITAL"],
+              ["BANGKOK","DUBAI","27 MIN · SUBORBITAL"],
+              ["TOKYO","LOS ANGELES","32 MIN · SUBORBITAL"],
+              ["DELHI","LONDON","27 MIN · SUBORBITAL"],
+              ["SÃO PAULO","NEW YORK","33 MIN · SUBORBITAL"],
+              ["HONOLULU","TOKYO","30 MIN · SUBORBITAL"]];
+  var ri=0, dir=1, t=0, DUR=17000, last=null, run=true, waiting=false;
+  function setLabels(){var r=routes[ri];fpA.textContent=dir>0?r[0]:r[1];fpB.textContent=dir>0?r[1]:r[0];fpT.textContent=r[2];}
+  function heroPlace(p){
+    var x,y,rot,pl=0,sc=.95, upRot=dir>0?-90:270, endRot=dir>0?29:151;
+    if(p<.1){var e=(p/.1)*(p/.1); x=dir>0?AX:BX; y=GY-LIFT*e; rot=upRot; pl=1;}
+    else if(p<.86){
+      var q=(p-.1)/.76, s=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2, prog=dir>0?s:1-s;
+      var L=prog*total, pt=path.getPointAtLength(L);
+      var L2=Math.min(total,Math.max(0,L+(dir>0?1.5:-1.5))), pt2=path.getPointAtLength(L2);
+      x=pt.x; y=pt.y; rot=Math.atan2(pt2.y-pt.y,pt2.x-pt.x)*180/Math.PI;
+      pl=q<.08?1-q/.08:0; sc=.9+.35*Math.sin(Math.PI*s);
+    }
+    else if(p<.9){var q=(p-.86)/.04; x=dir>0?BX:AX; y=GY-LIFT; rot=endRot+(upRot-endRot)*q; pl=.5*q;}
+    else {var q=(p-.9)/.1, e=1-Math.pow(1-q,2); x=dir>0?BX:AX; y=GY-LIFT*(1-e); rot=upRot; pl=.9*(1-q*.45);}
+    ship.setAttribute("transform","translate("+x+" "+y+") rotate("+rot+") scale("+sc+")");
+    if(plume) plume.setAttribute("opacity",String(Math.max(0,pl)));
+  }
+  var traffic=[];
+  [["traffic1","fpath2",21000,7000],["traffic2","fpath3",26000,13000]].forEach(function(cfg){
+    var el=document.getElementById(cfg[0]), tp=document.getElementById(cfg[1]);
+    if(el&&tp&&tp.getTotalLength) traffic.push({el:el,path:tp,total:tp.getTotalLength(),dur:cfg[2],off:cfg[3]});
+  });
+  function placeTraffic(now){
+    traffic.forEach(function(tr){
+      var q=((now+tr.off)%tr.dur)/tr.dur;
+      var s=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;
+      var L=s*tr.total, pt=tr.path.getPointAtLength(L);
+      var pt2=tr.path.getPointAtLength(Math.min(tr.total,L+1.5));
+      var edge=Math.max(0,Math.min(1,Math.min(q/.07,(1-q)/.07)));
+      tr.el.setAttribute("opacity",String(edge));
+      tr.el.setAttribute("transform","translate("+pt.x+" "+pt.y+") rotate("+(Math.atan2(pt2.y-pt.y,pt2.x-pt.x)*180/Math.PI)+")");
+    });
+  }
+  if(reduced){ setLabels(); heroPlace(.5); ship.setAttribute("opacity","1"); if(plume)plume.setAttribute("opacity","0"); return; }
+  setLabels();
+  var hero=document.querySelector(".hero");
+  if("IntersectionObserver" in window && hero){
+    new IntersectionObserver(function(en){en.forEach(function(x){run=x.isIntersecting;})},{threshold:.05}).observe(hero);
+  }
+  function frame(now){
+    requestAnimationFrame(frame);
+    if(!run){last=now;return;}
+    placeTraffic(now);
+    if(waiting){last=now;return;}
+    if(last==null)last=now;
+    t+=now-last; last=now;
+    var p=t/DUR;
+    if(p>=1){
+      heroPlace(1); if(plume)plume.setAttribute("opacity","0");
+      ship.setAttribute("opacity","0"); waiting=true;
+      setTimeout(function(){
+        dir*=-1; if(dir>0)ri=(ri+1)%routes.length;
+        setLabels(); t=0; waiting=false; ship.setAttribute("opacity","1");
+      },1600);
+      return;
+    }
+    ship.setAttribute("opacity","1");
+    heroPlace(p);
+  }
+  requestAnimationFrame(frame);
+})();
+
+/* ---- beyond: path-following ships ---- */
+(function(){
+  var ships=$$(".pship"); if(!ships.length) return;
+  var reduced=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  ships.forEach(function(sp,i){
+    var pathEl=document.querySelector(sp.getAttribute("data-follow"));
+    if(!pathEl||!pathEl.getTotalLength) return;
+    var dur=(parseFloat(sp.getAttribute("data-dur"))||10)*1000;
+    var scl=parseFloat(sp.getAttribute("data-scale"))||1;
+    var total=pathEl.getTotalLength(), t0=performance.now()+i*1400;
+    function put(L,op){
+      var pt=pathEl.getPointAtLength(L), pt2=pathEl.getPointAtLength(Math.min(total,L+1.5));
+      sp.setAttribute("opacity",String(op));
+      sp.setAttribute("transform","translate("+pt.x+" "+pt.y+") rotate("+(Math.atan2(pt2.y-pt.y,pt2.x-pt.x)*180/Math.PI)+") scale("+scl+")");
+    }
+    if(reduced){ put(total*.55,1); return; }
+    function fr(now){
+      requestAnimationFrame(fr);
+      var q=((now-t0)/dur)%1; if(q<0)q+=1;
+      var s=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;
+      var edge=Math.max(0,Math.min(1,Math.min(q/.08,(1-q)/.08)));
+      put(s*total,edge);
+    }
+    requestAnimationFrame(fr);
+  });
+})();
+
+/* ---- ports: radar echo map ---- */
+(function(){
+  var svg=document.getElementById("pmsvg"), zoom=document.getElementById("pmzoom"),
+      box=document.getElementById("portmap"), hudP=document.getElementById("pm-ping");
+  if(!svg||!zoom||!box) return;
+  var W=1024,H=512,NS="http://www.w3.org/2000/svg";
+  function XY(lat,lon){return [(lon+180)/360*W,(90-lat)/180*H];}
+  function el(n,at){var e=document.createElementNS(NS,n);for(var k in at)e.setAttribute(k,at[k]);svg.appendChild(e);return e;}
+  var PORTS=[[25.99,-97.16],[28.56,-80.58],[34.63,-120.61]];
+  var FUT=[[40.4,-73.3],[34.9,140.1]];
+  var CITIES=[["LOS ANGELES",34.05,-118.24],["TORONTO",43.65,-79.38],["NEW YORK",40.71,-74.01],["LONDON",51.51,-0.13],["PARIS",48.86,2.35],["DUBAI",25.2,55.27],["DELHI",28.61,77.21],["BANGKOK",13.76,100.5],["SINGAPORE",1.35,103.82],["SHANGHAI",31.23,121.47],["TOKYO",35.68,139.69],["SEOUL",37.57,126.98],["SYDNEY",-33.87,151.21],["HONOLULU",21.31,-157.86],["MEXICO CITY",19.43,-99.13],["SÃO PAULO",-23.55,-46.63],["ANCHORAGE",61.22,-149.9],["CAPE TOWN",-33.92,18.42]];
+  var rings=[];
+  PORTS.forEach(function(p,i){
+    var xy=XY(p[0],p[1]);
+    el("circle",{cx:xy[0],cy:xy[1],r:3.2,"class":"pm-port"});
+    [-W,0,W].forEach(function(sh){
+      rings.push({x:xy[0]+sh,y:xy[1],
+        c1:el("circle",{cx:xy[0]+sh,cy:xy[1],r:0,"class":"pm-ring"}),
+        c2:el("circle",{cx:xy[0]+sh,cy:xy[1],r:0,"class":"pm-ring"}),
+        off:i*2600});
+    });
+  });
+  FUT.forEach(function(p){var xy=XY(p[0],p[1]);el("circle",{cx:xy[0],cy:xy[1],r:4,"class":"pm-fut"});});
+  var cities=CITIES.map(function(c){
+    var xy=XY(c[1],c[2]);
+    var dot=el("circle",{cx:xy[0],cy:xy[1],r:2.1,"class":"pm-city"});
+    var lbl=el("text",{x:xy[0]+5,y:xy[1]-4,"class":"pm-lbl"});
+    lbl.textContent=c[0];
+    return {x:xy[0],y:xy[1],dot:dot,lbl:lbl,lit:-9999};
+  });
+  var T=9000, RMAX=620, BAND=16;
+  var reduced=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var visible=false, started=false;
+  function start(){ if(!started){started=true; requestAnimationFrame(function(){zoom.classList.add("out");}); } }
+  if("IntersectionObserver" in window){
+    new IntersectionObserver(function(en){en.forEach(function(x){visible=x.isIntersecting; if(x.isIntersecting)start();})},{threshold:.15}).observe(box);
+  } else { visible=true; start(); }
+  if(reduced){
+    zoom.classList.add("out");
+    cities.forEach(function(c){c.dot.classList.add("lit");});
+    rings.forEach(function(r){r.c1.setAttribute("opacity","0");r.c2.setAttribute("opacity","0");});
+    if(hudP)hudP.textContent=cities.length+" CITIES MAPPED";
+    return;
+  }
+  function frame(now){
+    requestAnimationFrame(frame);
+    if(!visible) return;
+    var count=0;
+    rings.forEach(function(rg){
+      [[rg.c1,0],[rg.c2,T/2]].forEach(function(pair){
+        var q=((now+rg.off+pair[1])%T)/T, r=q*RMAX;
+        pair[0].setAttribute("r",String(r));
+        pair[0].setAttribute("opacity",String(.8*(1-q)));
+        cities.forEach(function(ct){
+          var d=Math.hypot(ct.x-rg.x,ct.y-rg.y);
+          if(Math.abs(d-r)<BAND) ct.lit=now;
+        });
+      });
+    });
+    cities.forEach(function(ct){
+      var on=now-ct.lit<900;
+      ct.dot.classList[on?"add":"remove"]("lit");
+      ct.lbl.classList[on?"add":"remove"]("lit");
+      if(on)count++;
+    });
+    if(hudP)hudP.textContent=count?count+" CITIES IN RANGE":"SWEEPING…";
+  }
+  requestAnimationFrame(frame);
+})();
+
+/* ---- e2e: live 3D globe with real-time terminator ---- */
+(function(){
+  var wrap=document.getElementById("globewrap"); if(!wrap) return;
+  var canvas=document.getElementById("globe"), flat=document.getElementById("flatmap"), hud=document.getElementById("sunspot");
+  var hooks={}, started=false;
+  window.__routeHot=function(id,on){var m=hooks[id];if(m){m.color.setHex(on?0xFF7A2F:0x3D4A66);m.opacity=on?1:.75;}};
+  function fail(){wrap.style.display="none"; if(flat)flat.classList.remove("flat-hidden");}
+  function subsolar(){
+    var d=new Date(), N=(Date.now()-Date.UTC(d.getUTCFullYear(),0,0))/86400000;
+    var decl=23.44*Math.sin((2*Math.PI/365)*(284+N));
+    var B=2*Math.PI*(N-81)/364;
+    var eot=9.87*Math.sin(2*B)-7.53*Math.cos(B)-1.5*Math.sin(B);
+    var hrs=d.getUTCHours()+d.getUTCMinutes()/60+d.getUTCSeconds()/3600;
+    var lon=180-15*(hrs+eot/60);
+    while(lon>180)lon-=360; while(lon<-180)lon+=360;
+    return {lat:decl,lon:lon};
+  }
+  function boot(){
+    if(started)return; started=true;
+    var s=document.createElement("script");
+    s.src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
+    s.onload=init; s.onerror=fail;
+    document.head.appendChild(s);
+  }
+  if("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){io.disconnect();boot();}})},{rootMargin:"600px"});
+    io.observe(wrap);
+  } else boot();
+  function init(){
+    try{
+      var reduced=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+      var scene=new THREE.Scene();
+      var camera=new THREE.PerspectiveCamera(38,1,.1,100); camera.position.z=2.75;
+      var group=new THREE.Group(); scene.add(group);
+      function size(){
+        var w=wrap.clientWidth,hh=wrap.clientHeight;
+        renderer.setSize(w,hh,false); camera.aspect=w/hh; camera.updateProjectionMatrix();
+      }
+      size(); window.addEventListener("resize",function(){size();needs=true;});
+      function llv(lat,lon,r){
+        var phi=(90-lat)*Math.PI/180, th=(lon+180)*Math.PI/180;
+        return new THREE.Vector3(-r*Math.sin(phi)*Math.cos(th), r*Math.cos(phi), r*Math.sin(phi)*Math.sin(th));
+      }
+      var sunU={value:new THREE.Vector3(1,0,0)};
+      var loader=new THREE.TextureLoader(); loader.crossOrigin="anonymous";
+      var texN=0;
+      function texDone(){ texN++; if(texN===2){ if(flat)flat.classList.add("flat-hidden"); needs=true; } }
+      var dayT=loader.load("https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg",texDone,undefined,fail);
+      var nightT=loader.load("https://unpkg.com/three-globe@2.31.0/example/img/earth-night.jpg",texDone,undefined,fail);
+      var earthMat=new THREE.ShaderMaterial({
+        uniforms:{dayT:{value:dayT},nightT:{value:nightT},sunDir:sunU},
+        vertexShader:[
+          "varying vec2 vUv; varying vec3 vN;",
+          "void main(){ vUv=uv; vN=normalize(normal);",
+          "gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }"
+        ].join("\n"),
+        fragmentShader:[
+          "uniform sampler2D dayT; uniform sampler2D nightT; uniform vec3 sunDir;",
+          "varying vec2 vUv; varying vec3 vN;",
+          "void main(){",
+          " float c=dot(normalize(vN),normalize(sunDir));",
+          " float m=smoothstep(-0.10,0.20,c);",
+          " vec3 day=texture2D(dayT,vUv).rgb;",
+          " vec3 night=texture2D(nightT,vUv).rgb*1.5+vec3(0.02,0.04,0.08);",
+          " vec3 col=mix(night,day,m);",
+          " float band=smoothstep(0.16,0.0,abs(c-0.02));",
+          " col+=vec3(1.0,0.45,0.18)*band*0.16;",
+          " gl_FragColor=vec4(col,1.0); }"
+        ].join("\n")
+      });
+      group.add(new THREE.Mesh(new THREE.SphereGeometry(1,64,64),earthMat));
+      var atmoMat=new THREE.ShaderMaterial({
+        uniforms:{},transparent:true,side:THREE.BackSide,depthWrite:false,blending:THREE.AdditiveBlending,
+        vertexShader:[
+          "varying vec3 vN; varying vec3 vP;",
+          "void main(){ vN=normalize(mat3(modelMatrix)*normal); vP=(modelMatrix*vec4(position,1.0)).xyz;",
+          "gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }"
+        ].join("\n"),
+        fragmentShader:[
+          "varying vec3 vN; varying vec3 vP;",
+          "void main(){ float f=pow(1.0-abs(dot(normalize(vN),normalize(cameraPosition-vP))),3.0);",
+          "gl_FragColor=vec4(0.30,0.52,1.0,1.0)*f*0.9; }"
+        ].join("\n")
+      });
+      group.add(new THREE.Mesh(new THREE.SphereGeometry(1.035,48,48),atmoMat));
+      var CITIES=[[34.05,-118.24],[43.65,-79.38],[40.71,-74.01],[51.51,-.13],[25.20,55.27],[13.76,100.50],[1.35,103.82],[31.23,121.47],[35.68,139.69],[-33.87,151.21]];
+      var dotG=new THREE.SphereGeometry(.012,8,8), dotM=new THREE.MeshBasicMaterial({color:0xCBD2DC});
+      CITIES.forEach(function(c){var m=new THREE.Mesh(dotG,dotM);m.position.copy(llv(c[0],c[1],1.005));group.add(m);});
+      var ROUTES=[["r1",40.71,-74.01,31.23,121.47],["r2",51.51,-.13,40.71,-74.01],["r3",34.05,-118.24,43.65,-79.38],["r4",-33.87,151.21,1.35,103.82],["r5",13.76,100.50,25.20,55.27]];
+      var pulses=[], pulseG=new THREE.SphereGeometry(.009,8,8);
+      ROUTES.forEach(function(r,i){
+        var a=llv(r[1],r[2],1.004), b=llv(r[3],r[4],1.004);
+        var mid=a.clone().add(b).multiplyScalar(.5);
+        mid.normalize().multiplyScalar(1+a.distanceTo(b)*.32);
+        var curve=new THREE.QuadraticBezierCurve3(a,mid,b);
+        var mat=new THREE.MeshBasicMaterial({color:0x3D4A66,transparent:true,opacity:.75});
+        hooks[r[0]]=mat;
+        group.add(new THREE.Mesh(new THREE.TubeGeometry(curve,40,.0045,6,false),mat));
+        var pm=new THREE.Mesh(pulseG,new THREE.MeshBasicMaterial({color:0xFF7A2F}));
+        group.add(pm); pulses.push({c:curve,m:pm,o:i*.2});
+      });
+      group.rotation.y=-1.1; group.rotation.x=.28;
+      var dragging=false,lx=0,ly=0,lastDrag=0,needs=true;
+      canvas.addEventListener("pointerdown",function(e){dragging=true;lx=e.clientX;ly=e.clientY;canvas.setPointerCapture&&canvas.setPointerCapture(e.pointerId);});
+      window.addEventListener("pointermove",function(e){
+        if(!dragging)return;
+        group.rotation.y+=(e.clientX-lx)*.005;
+        group.rotation.x=Math.max(-.6,Math.min(.6,group.rotation.x+(e.clientY-ly)*.003));
+        lx=e.clientX;ly=e.clientY;lastDrag=performance.now();needs=true;
+      });
+      window.addEventListener("pointerup",function(){dragging=false;lastDrag=performance.now();});
+      function sun(){
+        var sp=subsolar();
+        sunU.value.copy(llv(sp.lat,sp.lon,1)).normalize();
+        if(hud)hud.innerHTML="SUBSOLAR <b>"+Math.abs(sp.lat).toFixed(1)+"°"+(sp.lat>=0?"N":"S")+" · "+Math.abs(sp.lon).toFixed(1)+"°"+(sp.lon>=0?"E":"W")+"</b> — LIVE";
+        needs=true;
+      }
+      sun(); setInterval(sun,60000);
+      var visible=true;
+      if("IntersectionObserver" in window){
+        new IntersectionObserver(function(en){en.forEach(function(x){visible=x.isIntersecting;})},{threshold:.02}).observe(wrap);
+      }
+      function loop(now){
+        requestAnimationFrame(loop);
+        if(!visible)return;
+        var moving=!reduced;
+        if(moving){
+          if(!dragging && now-lastDrag>2500) group.rotation.y+=.0011;
+          pulses.forEach(function(p){p.m.position.copy(p.c.getPoint((now/4200+p.o)%1));});
+          renderer.render(scene,camera);
+        } else if(needs){ renderer.render(scene,camera); needs=false; }
+      }
+      requestAnimationFrame(loop);
+    }catch(e){ fail(); }
+  }
+})();
+
+/* ---- holdings: market signals feed ---- */
+(function(){
+  var box=document.getElementById("sigbox"); if(!box) return;
+  Promise.all([
+    cachedFetch("https://api.spaceflightnewsapi.net/v4/articles/?limit=6&search=spacex%20valuation").then(function(r){return r.json()}).catch(function(){return {results:[]}}),
+    new Promise(function(res){setTimeout(res,900)}).then(function(){
+      return cachedFetch("https://api.spaceflightnewsapi.net/v4/articles/?limit=6&search=xai").then(function(r){return r.json()}).catch(function(){return {results:[]}});
+    })
+  ]).then(function(rs){
+    var seen={},all=[];
+    rs.forEach(function(j){(j.results||[]).forEach(function(a){if(a&&a.id&&!seen[a.id]){seen[a.id]=1;all.push(a);}})});
+    all.sort(function(a,b){return new Date(b.published_at)-new Date(a.published_at)});
+    all=all.slice(0,5);
+    if(!all.length){box.innerHTML='<div class="wire-msg">NO SIGNALS ON THIS BAND RIGHT NOW.</div>';return;}
+    box.innerHTML=all.map(function(a){
+      return '<a class="sig" href="'+esc(a.url)+'" target="_blank" rel="noopener"><span class="st">'+esc(a.title)+'</span><span class="sm">'+esc(a.news_site||"")+'</span></a>';
+    }).join("");
+  }).catch(function(){box.innerHTML='<div class="wire-msg">SIGNAL LOST.</div>';});
+})();
+
+})();
+</script>
+</body>
+</html>
