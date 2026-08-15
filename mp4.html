@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LC-4400 · Link → MP4 Format Converter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --wash:#CFC5B2;
+    --putty:#E7E0D4;
+    --putty-deep:#D9CFBD;
+    --edge:#B4A88F;
+    --ink:#2A251C;
+    --ink-soft:#6A6049;
+    --lcd:#181206;
+    --lcd-line:#2A2110;
+    --amber:#FFB454;
+    --amber-dim:#B98A47;
+    --rec:#D0402E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--wash)}
+  body{
+    font-family:'Archivo',sans-serif;color:var(--ink);
+    padding:28px 14px 48px;min-height:100vh;
+  }
+  .deck{
+    max-width:860px;margin:0 auto;background:var(--putty);
+    border:1px solid var(--edge);border-radius:14px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.65), inset 0 -2px 0 rgba(0,0,0,.08), 0 14px 30px rgba(42,37,28,.22);
+    overflow:hidden;
+  }
+  /* ---- model plate ---- */
+  .plate{
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    padding:18px 22px 16px;border-bottom:1px solid var(--edge);
+    background:linear-gradient(180deg, #EFE9DE 0%, var(--putty) 100%);
+  }
+  .led{
+    width:12px;height:12px;border-radius:50%;flex:none;
+    background:#7d7461;box-shadow:inset 0 1px 2px rgba(0,0,0,.45);
+    transition:background .25s ease;
+  }
+  .led.on{background:var(--amber);box-shadow:0 0 8px rgba(255,180,84,.85), inset 0 0 2px rgba(0,0,0,.25)}
+  .led.err{background:var(--rec);box-shadow:0 0 8px rgba(208,64,46,.8), inset 0 0 2px rgba(0,0,0,.25)}
+  @media (prefers-reduced-motion: no-preference){
+    .led.on{animation:pulse 2.4s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+  }
+  .plate h1{
+    font-family:'Saira Condensed',sans-serif;font-weight:700;
+    font-size:clamp(24px,4.5vw,34px);letter-spacing:.06em;line-height:1;
+    text-shadow:0 1px 0 rgba(255,255,255,.5);
+  }
+  .plate .model{
+    margin-left:auto;text-align:right;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);
+    letter-spacing:.12em;
+  }
+  .tagline{
+    padding:10px 22px;font-size:13.5px;color:var(--ink-soft);
+    border-bottom:1px solid var(--edge);background:var(--putty);
+  }
+  /* ---- panel sections ---- */
+  .panel{padding:18px 22px;border-bottom:1px solid var(--edge)}
+  .panel:last-of-type{border-bottom:none}
+  .panel-label{
+    font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:14px;
+    letter-spacing:.28em;color:var(--ink-soft);
+    display:flex;align-items:center;gap:12px;margin-bottom:12px;
+    text-shadow:0 1px 0 rgba(255,255,255,.5);
+  }
+  .panel-label::after{content:"";flex:1;height:1px;background:var(--edge);opacity:.7}
+  .panel-label .meta{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;
+    color:var(--ink-soft);text-transform:none;
+  }
+  textarea,input[type=text]{
+    width:100%;font-family:'IBM Plex Mono',monospace;font-size:13.5px;
+    color:var(--ink);background:#F4EFE5;
+    border:1px solid var(--edge);border-radius:8px;padding:11px 12px;
+    box-shadow:inset 0 2px 4px rgba(42,37,28,.12);
+    outline:none;
+  }
+  textarea{min-height:96px;resize:vertical;line-height:1.6}
+  textarea:focus-visible,input[type=text]:focus-visible,button:focus-visible{
+    outline:2px solid var(--amber);outline-offset:2px;
+  }
+  .hint{margin-top:8px;font-size:12px;color:var(--ink-soft)}
+  .hint code{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;background:var(--putty-deep);
+    border:1px solid var(--edge);border-radius:4px;padding:1px 5px;
+  }
+  /* ---- preset buttons ---- */
+  .presets{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .chip{
+    font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:13px;
+    letter-spacing:.14em;color:var(--ink);cursor:pointer;
+    background:var(--putty-deep);border:1px solid var(--edge);border-radius:7px;
+    padding:7px 13px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.55), 0 2px 0 rgba(42,37,28,.18);
+  }
+  .chip:active{transform:translateY(1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 1px 0 rgba(42,37,28,.18)}
+  .chip[aria-pressed="true"]{
+    background:var(--ink);color:var(--putty);border-color:var(--ink);
+    box-shadow:inset 0 2px 3px rgba(0,0,0,.4);
+  }
+  /* ---- LCD output rows ---- */
+  .row{display:flex;gap:10px;align-items:stretch;margin-bottom:12px}
+  .lcd{
+    flex:1;min-width:0;background:var(--lcd);border-radius:8px;
+    border:1px solid #4a3d24;
+    box-shadow:inset 0 3px 10px rgba(0,0,0,.7), 0 1px 0 rgba(255,255,255,.5);
+    padding:10px 13px;
+  }
+  .lcd .top{
+    display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;
+    border-bottom:1px solid var(--lcd-line);padding-bottom:6px;margin-bottom:7px;
+  }
+  .lcd .tag{
+    font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:12px;
+    letter-spacing:.2em;color:var(--amber);
+  }
+  .lcd .src{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--amber-dim);
+    min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;
+  }
+  .lcd .note{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--amber-dim)}
+  .lcd .out{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;
+    color:var(--amber);word-break:break-all;line-height:1.5;
+    text-shadow:0 0 6px rgba(255,180,84,.35);
+  }
+  .lcd.err .tag,.lcd.err .out{color:var(--rec);text-shadow:0 0 6px rgba(208,64,46,.3)}
+  .btn{
+    flex:none;align-self:center;cursor:pointer;
+    font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:13px;letter-spacing:.14em;
+    color:var(--ink);background:var(--putty-deep);
+    border:1px solid var(--edge);border-radius:7px;padding:10px 14px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.55), 0 2px 0 rgba(42,37,28,.18);
+  }
+  .btn:active{transform:translateY(1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 1px 0 rgba(42,37,28,.18)}
+  .btn.copied{background:var(--ink);color:var(--amber);border-color:var(--ink)}
+  .output-foot{display:flex;align-items:center;gap:12px;margin-top:4px;flex-wrap:wrap}
+  .empty{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);
+    padding:6px 2px;
+  }
+  .footnote{
+    padding:14px 22px 20px;font-size:12px;color:var(--ink-soft);line-height:1.55;
+    background:var(--putty);
+  }
+  @media (max-width:560px){
+    .row{flex-direction:column}
+    .btn{align-self:stretch}
+    .plate .model{margin-left:0;text-align:left;width:100%}
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <div class="plate">
+    <div class="led" id="led"></div>
+    <h1>LINK &#8594; MP4</h1>
+    <div class="model">MDL LC-4400<br>FORMAT CONVERTER</div>
+  </div>
+
+  <div class="tagline">Rewrites any https link into a custom address that ends in <strong>.mp4</strong>. Paste one or many, set your naming pattern, copy the result.</div>
+
+  <section class="panel">
+    <div class="panel-label"><label for="links">INPUT</label><span class="meta">one https link per line</span></div>
+    <textarea id="links" spellcheck="false" autocomplete="off">https://www.youtube.com/watch?v=dQw4w9WgXcQ</textarea>
+  </section>
+
+  <section class="panel">
+    <div class="panel-label"><label for="template">FORMAT</label><span class="meta">naming pattern</span></div>
+    <input type="text" id="template" spellcheck="false" autocomplete="off" value="https://your-domain.com/v/{id}.mp4">
+    <div class="presets" id="presets"></div>
+    <div class="hint">
+      Tokens: <code>{id}</code> video ID &nbsp;<code>{slug}</code> last path segment &nbsp;<code>{host}</code> source site &nbsp;<code>{path}</code> full path &nbsp;<code>{url}</code> original link, encoded &nbsp;<code>{ts}</code> timestamp. If the pattern doesn't end in .mp4, it gets appended.
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-label">OUTPUT<span class="meta" id="count"></span></div>
+    <div id="results" aria-live="polite"></div>
+    <div class="output-foot">
+      <button class="btn" id="copyAll" type="button">COPY ALL</button>
+    </div>
+  </section>
+
+  <div class="footnote">
+    Note: this converts the address itself. For the new link to actually play or download a video, the pattern needs to point at a server, worker, or redirect that serves the file &mdash; a real .mp4 URL will then embed directly in places like Discord.
+  </div>
+</div>
+
+<script>
+(function(){
+  var $ = function(s){ return document.querySelector(s); };
+  var linksEl = $('#links'), tplEl = $('#template'), resultsEl = $('#results'),
+      ledEl = $('#led'), countEl = $('#count'), copyAllBtn = $('#copyAll'),
+      presetsEl = $('#presets');
+
+  var DEFAULT_TPL = 'https://your-domain.com/v/{id}.mp4';
+
+  var PRESETS = [
+    { name: 'ID',        tpl: 'https://your-domain.com/v/{id}.mp4' },
+    { name: 'HOST + ID', tpl: 'https://your-domain.com/{host}/{id}.mp4' },
+    { name: 'SLUG',      tpl: 'https://your-domain.com/{slug}.mp4' },
+    { name: 'WRAP',      tpl: 'https://your-domain.com/fetch?src={url}&name={id}.mp4' }
+  ];
+
+  var EXTRACTORS = [
+    { tag: 'YOUTUBE',    re: /(?:youtube\.com\/(?:watch\?.*?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{5,})/i },
+    { tag: 'X-TWITTER',  re: /(?:twitter\.com|x\.com)\/[^\/]+\/status\/(\d+)/i },
+    { tag: 'TIKTOK',     re: /tiktok\.com\/@[^\/]+\/video\/(\d+)/i },
+    { tag: 'INSTAGRAM',  re: /instagram\.com\/(?:reels?|p|tv)\/([A-Za-z0-9_-]+)/i },
+    { tag: 'REDDIT',     re: /reddit\.com\/r\/[^\/]+\/comments\/([a-z0-9]+)/i },
+    { tag: 'REDDIT',     re: /v\.redd\.it\/([a-z0-9]+)/i },
+    { tag: 'STREAMABLE', re: /streamable\.com\/([a-z0-9]+)/i },
+    { tag: 'TWITCH',     re: /clips\.twitch\.tv\/([A-Za-z0-9_-]+)/i },
+    { tag: 'VIMEO',      re: /vimeo\.com\/(\d+)/i },
+    { tag: 'IMGUR',      re: /imgur\.com\/(?:a\/|gallery\/)?([A-Za-z0-9]+)/i },
+    { tag: 'GDRIVE',     re: /drive\.google\.com\/file\/d\/([A-Za-z0-9_-]+)/i }
+  ];
+
+  function clean(s){
+    s = (s || '').replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '');
+    return s || 'file';
+  }
+
+  function analyze(raw){
+    var s = raw.trim();
+    if (!s) return null;
+    var note = '';
+    if (/^http:\/\//i.test(s)) { s = 'https://' + s.slice(7); note = 'upgraded http\u2192https'; }
+    if (!/^https:\/\//i.test(s)) return { ok:false, raw:raw.trim(), err:'NO SIGNAL \u2014 link must start with https://' };
+    var u;
+    try { u = new URL(s); } catch(e){ return { ok:false, raw:raw.trim(), err:'NO SIGNAL \u2014 not a valid link' }; }
+
+    var tag = 'GENERIC', id = null;
+    for (var i = 0; i < EXTRACTORS.length; i++){
+      var m = s.match(EXTRACTORS[i].re);
+      if (m){ tag = EXTRACTORS[i].tag; id = m[1]; break; }
+    }
+    var segs = u.pathname.split('/').filter(Boolean);
+    var slug = segs.length ? segs[segs.length - 1] : u.hostname;
+    slug = clean(slug.replace(/\.[A-Za-z0-9]{1,5}$/, ''));
+    if (!id) id = slug;
+    var path = clean(segs.join('-')) === 'file' && !segs.length ? clean(u.hostname) : clean(segs.join('-'));
+    return { ok:true, raw:s, note:note, tag:tag, id:clean(id), slug:slug, path:path, host:u.hostname, url:s };
+  }
+
+  function buildOut(rec, template){
+    var t = (template || '').trim() || DEFAULT_TPL;
+    var out = t
+      .split('{id}').join(rec.id)
+      .split('{slug}').join(rec.slug)
+      .split('{path}').join(rec.path)
+      .split('{host}').join(rec.host)
+      .split('{ts}').join(String(Date.now()))
+      .split('{url}').join(encodeURIComponent(rec.url));
+    if (!/\.mp4([?#]|$)/i.test(out)) out = out.replace(/\/+$/, '') + '.mp4';
+    return out;
+  }
+
+  function copyText(t, btn){
+    var done = function(ok){
+      if (!btn) return;
+      var old = btn.textContent;
+      btn.textContent = ok ? 'COPIED' : 'FAILED';
+      btn.classList.add('copied');
+      setTimeout(function(){ btn.textContent = old; btn.classList.remove('copied'); }, 1200);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t).then(function(){ done(true); }, function(){ fallback(); });
+    } else { fallback(); }
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch(e){}
+      document.body.removeChild(ta);
+      done(ok);
+    }
+  }
+
+  function render(){
+    var lines = linksEl.value.split('\n');
+    var tpl = tplEl.value;
+    resultsEl.textContent = '';
+    var okCount = 0, errCount = 0, allOut = [];
+
+    for (var i = 0; i < lines.length; i++){
+      var rec = analyze(lines[i]);
+      if (!rec) continue;
+
+      var row = document.createElement('div'); row.className = 'row';
+      var lcd = document.createElement('div'); lcd.className = 'lcd';
+      var top = document.createElement('div'); top.className = 'top';
+      var tag = document.createElement('span'); tag.className = 'tag';
+      var src = document.createElement('span'); src.className = 'src';
+      var out = document.createElement('div'); out.className = 'out';
+
+      if (rec.ok){
+        okCount++;
+        var converted = buildOut(rec, tpl);
+        allOut.push(converted);
+        tag.textContent = '\u25AE ' + rec.tag;
+        src.textContent = rec.raw;
+        out.textContent = converted;
+        top.appendChild(tag); top.appendChild(src);
+        if (rec.note){
+          var note = document.createElement('span'); note.className = 'note';
+          note.textContent = rec.note; top.appendChild(note);
+        }
+        lcd.appendChild(top); lcd.appendChild(out);
+
+        var btn = document.createElement('button');
+        btn.className = 'btn'; btn.type = 'button'; btn.textContent = 'COPY';
+        (function(text, b){ b.addEventListener('click', function(){ copyText(text, b); }); })(converted, btn);
+        row.appendChild(lcd); row.appendChild(btn);
+      } else {
+        errCount++;
+        lcd.classList.add('err');
+        tag.textContent = '\u25AE ERR';
+        src.textContent = rec.raw;
+        out.textContent = rec.err;
+        top.appendChild(tag); top.appendChild(src);
+        lcd.appendChild(top); lcd.appendChild(out);
+        row.appendChild(lcd);
+      }
+      resultsEl.appendChild(row);
+    }
+
+    if (!okCount && !errCount){
+      var empty = document.createElement('div'); empty.className = 'empty';
+      empty.textContent = 'STANDBY \u2014 waiting for input';
+      resultsEl.appendChild(empty);
+    }
+
+    countEl.textContent = okCount + ' converted' + (errCount ? ' / ' + errCount + ' error' + (errCount > 1 ? 's' : '') : '');
+    ledEl.className = 'led' + (errCount ? ' err' : (okCount ? ' on' : ''));
+    copyAllBtn.style.display = okCount > 1 ? '' : 'none';
+    copyAllBtn.dataset.payload = allOut.join('\n');
+    syncPresets();
+  }
+
+  function syncPresets(){
+    var current = tplEl.value.trim();
+    var chips = presetsEl.querySelectorAll('.chip');
+    for (var i = 0; i < chips.length; i++){
+      chips[i].setAttribute('aria-pressed', chips[i].dataset.tpl === current ? 'true' : 'false');
+    }
+  }
+
+  PRESETS.forEach(function(p){
+    var b = document.createElement('button');
+    b.className = 'chip'; b.type = 'button'; b.textContent = p.name;
+    b.dataset.tpl = p.tpl; b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', function(){ tplEl.value = p.tpl; render(); });
+    presetsEl.appendChild(b);
+  });
+
+  copyAllBtn.addEventListener('click', function(){ copyText(copyAllBtn.dataset.payload || '', copyAllBtn); });
+  linksEl.addEventListener('input', render);
+  tplEl.addEventListener('input', render);
+
+  render();
+})();
+</script>
+</body>
+</html>
