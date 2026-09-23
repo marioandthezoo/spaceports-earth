@@ -3,15 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Content Security Policy: scripts only from this site, the one-line boot snippet
+     below (allowed by its hash — edit it and the hash must change too) and the
+     pinned three.js file on cdnjs; live data only from the three public APIs.
+     The sign-up form never posts natively (form-action 'none'); when a provider
+     is configured, add its origin to connect-src (see app.js / README). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-91RUq0Yp8m1iYBV0nEy0Yo99drXXT1ikES/2eUT0O5Y=' https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://ll.thespacedevs.com https://api.spaceflightnewsapi.net https://images-api.nasa.gov; frame-src https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>SPACEPORTS.EARTH — The Planetary Departure Guide</title>
 <meta name="author" content="Mario E. Delgado">
 <meta name="description" content="Independent guide to Earth's spaceports: live departures, SpaceX launch sites, Earth-to-Earth Starship travel, and destinations beyond.">
+<meta name="theme-color" content="#0A0D15">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://spaceports.earth/">
 <meta property="og:title" content="SPACEPORTS.EARTH">
 <meta property="og:description" content="Live departures, launch sites, Earth-to-Earth routes, and destinations beyond. Earth's departure guide.">
+<meta property="og:image" content="https://spaceports.earth/hero-starship.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="22" fill="none" stroke="%23CBD2DC" stroke-width="3"/><circle cx="32" cy="10" r="7" fill="%23FF7A2F"/></svg>'>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="dns-prefetch" href="https://images-assets.nasa.gov">
-<link rel="dns-prefetch" href="https://unpkg.com">
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Big+Shoulders+Display:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -58,15 +69,16 @@ img{display:block;max-width:100%}
 .sec-note a:hover{border-color:var(--plume)}
 
 /* reveal on scroll */
-.rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
-.rv.in{opacity:1;transform:none}
+.rv{transition:opacity .7s ease,transform .7s ease}
+.js .rv{opacity:0;transform:translateY(18px)}
+.js .rv.in{opacity:1;transform:none}
 
 /* ---------- header ---------- */
 .top{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(10,13,21,.78);backdrop-filter:blur(10px);border-bottom:1px solid var(--line-soft)}
 .top-in{max-width:1240px;margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .brand{font-family:var(--disp);font-weight:800;font-size:20px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
 .brand span{background:var(--heat);-webkit-background-clip:text;background-clip:text;color:transparent}
-.nav{display:flex;gap:22px;overflow-x:auto;scrollbar-width:none}
+.nav{display:flex;gap:22px;overflow-x:auto;scrollbar-width:none;padding-right:24px;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 24px),transparent)}
 .nav::-webkit-scrollbar{display:none}
 .nav a{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;white-space:nowrap;transition:color .2s}
 .nav a:hover{color:var(--plume)}
@@ -74,23 +86,6 @@ img{display:block;max-width:100%}
 /* ---------- hero ---------- */
 .hero{position:relative;min-height:94vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;
   background:linear-gradient(100deg,rgba(7,10,18,.86) 0%,rgba(7,10,18,.5) 42%,rgba(10,13,21,.16) 68%,rgba(10,13,21,.04) 100%),linear-gradient(to top,rgba(7,10,18,.94) 0%,rgba(7,10,18,.3) 24%,rgba(7,10,18,0) 46%),url("hero-starship.jpg") center/cover no-repeat #0A0D15}
-.stars{display:none}
-.stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#AEB9CC;opacity:.7;animation:tw 4s ease-in-out infinite}
-.stars i:nth-child(odd){animation-delay:2s;opacity:.45}
-@keyframes tw{0%,100%{opacity:.25}50%{opacity:.85}}
-.fpath{stroke:rgba(203,210,220,.28);stroke-width:1.4;fill:none;stroke-dasharray:2 7}
-.fport{fill:var(--plume)}
-.fring{fill:none;stroke:var(--plume);stroke-width:1.2;opacity:.7;animation:pring 2.6s ease-out infinite}
-@keyframes pring{0%{transform:scale(.4);opacity:.8}100%{transform:scale(2.2);opacity:0}}
-.flbl{font-family:var(--mono);font-size:11px;letter-spacing:.14em;fill:var(--dim)}
-.flbl.hotlbl{fill:var(--plume)}
-.ship-fill{fill:#D8DEE7}.ship-line{stroke:#8F9AAC;stroke-width:1;fill:none}.ship-win{fill:#39445C}
-.plume-f{fill:url(#plumegrad)}
-.skyline{fill:#141C2E;stroke:#26334E;stroke-width:.6}
-.sky-glow{fill:none;stroke:rgba(255,183,120,.35);stroke-width:1}
-.traffic{opacity:.55}
-.traffic.t2{opacity:.4}
-.vline{stroke:rgba(203,210,220,.2);stroke-width:1;stroke-dasharray:1 5}
 .hero-in{position:relative;z-index:2;width:100%;max-width:1240px;margin:0 auto;padding:120px 24px 150px}
 .hero .kicker{display:block;margin-bottom:22px}
 .wordmark{font-family:var(--disp);font-weight:800;text-transform:uppercase;line-height:.88;letter-spacing:.01em;font-size:clamp(64px,12.5vw,176px)}
@@ -124,7 +119,7 @@ img{display:block;max-width:100%}
 .bmission small{display:block;font-family:var(--mono);font-weight:400;font-size:11px;color:var(--dim);letter-spacing:.06em;text-transform:none;margin-top:3px}
 .bcell{font-family:var(--mono);font-size:12.5px;color:var(--dim);letter-spacing:.03em;line-height:1.45}
 .bcell b{display:block;color:var(--steel);font-weight:500}
-.bstatus{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;justify-self:end;padding:5px 10px;border:1px solid var(--line);color:var(--dim)}
+.bstatus{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;justify-self:end;padding:5px 8px;border:1px solid var(--line);color:var(--dim);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
 .bstatus.go{color:var(--go);border-color:rgba(87,199,133,.4)}
 .bstatus.tbd{color:var(--hold);border-color:rgba(224,179,76,.4)}
 .board-msg{padding:40px 24px;text-align:center;color:var(--dim);font-family:var(--mono);font-size:13px;letter-spacing:.04em}
@@ -143,7 +138,7 @@ img{display:block;max-width:100%}
 .port-photo{width:100%;height:224px;object-fit:cover;display:block;filter:saturate(.82) contrast(1.04) brightness(.94);transition:filter .35s}
 .port:hover .port-photo{filter:none}
 .port-artcap{position:absolute;left:0;right:0;bottom:0;padding:26px 14px 9px;background:linear-gradient(to top,rgba(6,9,15,.9),transparent);font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--dim)}
-.port.wide .port-photo{height:auto}
+.port.wide .port-photo{height:auto;max-height:460px;object-fit:cover;object-position:50% 38%}
 .port-body{padding:24px 26px 28px}
 .port-name{font-family:var(--disp);font-weight:700;font-size:30px;text-transform:uppercase;letter-spacing:.02em;line-height:1}
 .port-loc{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--plume);text-transform:uppercase;margin:8px 0 16px}
@@ -163,7 +158,7 @@ img{display:block;max-width:100%}
 .dglabel{font-family:var(--mono);font-size:9px;letter-spacing:.16em;fill:var(--faint)}
 
 /* ---------- earth to earth ---------- */
-.e2e{display:grid;grid-template-columns:1fr;gap:36px}
+.e2e{display:grid;grid-template-columns:minmax(0,1fr);gap:36px}
 .routemap{border:1px solid var(--line);background:var(--panel);padding:10px}
 .routemap svg{display:block;width:100%;height:auto}
 .grat{stroke:#1B2537;stroke-width:1}
@@ -246,7 +241,7 @@ img{display:block;max-width:100%}
 
 /* ---------- section banners ---------- */
 .sec-banner{margin:0 0 26px;border:1px solid var(--line);background:var(--panel)}
-.sec-banner img{width:100%;display:block}
+.sec-banner img{width:100%;display:block;max-height:380px;object-fit:cover}
 .sec-banner figcaption{padding:8px 14px;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase;border-top:1px solid var(--line-soft)}
 
 /* ---------- ports radar map ---------- */
@@ -268,25 +263,32 @@ img{display:block;max-width:100%}
 
 /* ---------- live globe ---------- */
 .globe-wrap{border:1px solid var(--line);background:radial-gradient(120% 120% at 50% 0%,#0D1424 0%,#080C15 60%);position:relative;aspect-ratio:16/10;overflow:hidden;margin-bottom:22px}
-.globe-wrap canvas{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
-.globe-wrap canvas:active{cursor:grabbing}
+.globe-wrap canvas{width:100%;height:100%;display:block}
+#globe{touch-action:pan-y;cursor:grab}
+#globe:active{cursor:grabbing}
+#globe-fx{position:absolute;inset:0;pointer-events:none}
 .globe-hud{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;gap:12px;padding:10px 14px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--faint);text-transform:uppercase;background:linear-gradient(to top,rgba(6,9,15,.85),transparent);pointer-events:none}
 .globe-hud .sunlive b{color:var(--plume);font-weight:500}
-.flat-hidden{display:none}
+.globe-board{position:absolute;left:14px;top:12px;display:grid;gap:4px;padding:10px 12px;background:rgba(7,11,19,.62);border:1px solid var(--line-soft);font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--faint);text-transform:uppercase;pointer-events:none;backdrop-filter:blur(3px)}
+.globe-board .gb-h{color:var(--dim);letter-spacing:.2em;margin-bottom:3px}
+.globe-board .gb-r{display:grid;grid-template-columns:76px 66px 58px;gap:8px;transition:color .2s}
+.globe-board .gb-r b{color:var(--dim);font-weight:500}
+.globe-board .gb-r.hot b{color:var(--plume)}
+.globe-board .s-boost,.globe-board .s-landing{color:var(--plume)}
+.globe-board .s-entry{color:#FF8FA3}
+.globe-board .s-coast{color:var(--steel)}
+.js .flat-hidden{display:none}
+html:not(.js) #globewrap{display:none}
+@media(max-width:1000px){.globe-board{display:none}}
 @media(max-width:560px){.globe-wrap{aspect-ratio:1/1}.globe-hud span:last-child{display:none}}
 
-/* ---------- beyond orbit scenes ---------- */
-.orbit-scene{position:relative;height:180px;margin:-26px -26px 18px;border-bottom:1px solid var(--line-soft);overflow:hidden;background:radial-gradient(90% 120% at 50% 0%,#0C1322 0%,#080C15 70%)}
-.planet{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:104px;height:104px;border-radius:50%;object-fit:cover;box-shadow:0 0 34px rgba(120,160,255,.18),inset -16px -12px 30px rgba(0,0,0,.55)}
-.obg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.92;filter:saturate(1.1)}
-.oflight{position:absolute;inset:0;width:100%;height:100%}
-.ocap{position:absolute;left:0;right:0;bottom:0;padding:20px 12px 7px;background:linear-gradient(to top,rgba(6,9,15,.85),transparent);font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--dim)}
-.mini-earth{position:absolute;left:22px;bottom:14px;width:52px;height:52px;border-radius:50%;object-fit:cover;transform:scale(1.12);box-shadow:0 0 18px rgba(120,160,255,.25)}
-.mini-moon{position:absolute;right:26px;top:16px;width:66px;height:66px;border-radius:50%;object-fit:cover;box-shadow:inset -10px -8px 18px rgba(0,0,0,.6),0 0 14px rgba(200,210,230,.12)}
-.big-mars{position:absolute;right:-34px;top:50%;transform:translateY(-50%) scale(1.12);width:150px;height:150px;border-radius:50%;object-fit:cover;box-shadow:inset -18px -10px 30px rgba(0,0,0,.6),0 0 26px rgba(255,140,90,.16)}
-.tli-track{stroke:#3A4763;stroke-width:1;stroke-dasharray:3 6}
-.orbiter{position:absolute;left:0;top:0;width:26px;height:26px;will-change:transform;transition:opacity .3s}
-.orbiter svg{width:100%;height:100%;overflow:visible}
+/* ---------- beyond: animated destination scenes (drawn in app.js) ---------- */
+.orbit-scene{position:relative;height:200px;margin:-26px -26px 18px;border-bottom:1px solid var(--line-soft);overflow:hidden;background:radial-gradient(90% 120% at 50% 0%,#0C1322 0%,#060910 72%)}
+.orbit-scene canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ohud{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;gap:10px;padding:22px 12px 8px;background:linear-gradient(to top,rgba(6,9,15,.9),transparent);font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;pointer-events:none;white-space:nowrap}
+.ohud b{color:var(--plume);font-weight:500}
+.ohud span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.ohud span:last-child{color:var(--faint);flex-shrink:0}
 
 /* ---------- holdings ---------- */
 .hold{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:22px}
@@ -315,10 +317,21 @@ img{display:block;max-width:100%}
 .man-in{max-width:640px;margin:0 auto;padding:0 24px;text-align:center}
 .man-title{font-family:var(--disp);font-weight:800;font-size:clamp(40px,6vw,68px);text-transform:uppercase;line-height:.95;margin:16px 0 14px}
 .man-sub{color:var(--dim);font-size:15px;margin-bottom:34px}
-.man-form{display:flex;gap:10px}
-.man-form input[type=email]{flex:1;min-width:0;background:var(--panel);border:1px solid var(--line);color:var(--steel);font-family:var(--mono);font-size:14px;padding:14px 16px;letter-spacing:.03em}
+.man-form{display:grid;gap:12px;text-align:left}
+.man-row{display:flex;gap:10px}
+.man-form input[type=email],.man-form input[type=text]{flex:1;min-width:0;background:var(--panel);border:1px solid var(--line);color:var(--steel);font-family:var(--mono);font-size:14px;padding:14px 16px;letter-spacing:.03em}
+.man-form input[type=email]{flex:1.4}
 .man-form input::placeholder{color:var(--faint)}
-.man-form input[type=email]:focus{outline:none;border-color:var(--plume)}
+.man-form input[type=email]:focus,.man-form input[type=text]:focus{outline:none;border-color:var(--plume)}
+.man-tags{border:none;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.man-tags legend{float:left;margin-right:6px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase}
+.man-tags label{cursor:pointer}
+.man-tags input{position:absolute;opacity:0;width:1px;height:1px}
+.man-tags span{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);padding:7px 12px;transition:all .2s}
+.man-tags label:hover span{color:var(--steel);border-color:var(--dim)}
+.man-tags input:checked+span{color:var(--plume);border-color:var(--plume);background:var(--plume-soft)}
+.man-tags input:focus-visible+span{outline:2px solid var(--plume);outline-offset:2px}
+.man-fine{margin-top:14px;font-size:12px;color:var(--faint);line-height:1.6}
 .man-btn{background:var(--plume);color:#0A0D15;border:1px solid var(--plume);font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;padding:14px 24px;cursor:pointer;transition:background .2s,color .2s}
 .man-btn:hover{background:transparent;color:var(--plume)}
 .man-btn[disabled]{opacity:.5;cursor:wait}
@@ -357,22 +370,24 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
 }
 @media(max-width:560px){
   .sec{padding:80px 0}
-  .brow{grid-template-columns:1fr 84px;gap:10px}
+  .brow{grid-template-columns:1fr 92px;gap:10px}
   .brow .c-pad{display:none}
-  .rrow{grid-template-columns:1fr 84px}
-  .rjet{display:none}
+  .rrow{grid-template-columns:minmax(0,1fr) 84px}
+  .rjet,.rjet-h{display:none}
   .gal{grid-template-columns:1fr}
   .chip{min-width:100%}
   .flstrip{grid-auto-columns:200px}
-  .man-form{flex-direction:column}
+  .man-row{flex-direction:column}
   .whead{font-size:19px}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
-  .rv,.brow.r{opacity:1;transform:none}
+  .rv,.js .rv,.brow.r{opacity:1;transform:none}
   html{scroll-behavior:auto}
 }
 </style>
+<script>document.documentElement.classList.add("js");setTimeout(function(){if(!window.SPX)document.documentElement.classList.remove("js")},4000);</script>
+<noscript><style>#manform,.man-fine{display:none}</style></noscript>
 </head>
 <body>
 
@@ -396,23 +411,6 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
 
 <!-- ================= HERO ================= -->
 <section class="hero">
-  <div class="stars" id="stars" aria-hidden="true"></div>
-
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-        <linearGradient id="plumegrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stop-color="#FFD9A6"/><stop offset=".45" stop-color="#FF8A3D"/><stop offset="1" stop-color="#FF8A3D" stop-opacity="0"/>
-        </linearGradient>
-        <g id="ship-shape">
-          <path class="plume-f ship-plume" d="M-3 -3 L-30 0 L-3 3 Z" opacity="0"/>
-          <path class="ship-fill" d="M0 -5 H30 C38 -5 44 -2.6 47 0 C44 2.6 38 5 30 5 H0 C-1.6 5 -2.6 4 -2.6 2.6 V-2.6 C-2.6 -4 -1.6 -5 0 -5 Z"/>
-          <path class="ship-fill" d="M2 -5 L8 -10 L13 -5 Z M2 5 L8 10 L13 5 Z"/>
-          <path class="ship-fill" d="M34 -4.2 L38.5 -7.6 L41.5 -4 Z M34 4.2 L38.5 7.6 L41.5 4 Z"/>
-          <path class="ship-line" d="M30 -5 C33 -3 33 3 30 5 M14 -5 V5"/>
-          <circle class="ship-win" cx="41" cy="-1.6" r="1.1"/>
-        </g>
-      </defs></svg>
-
-
   <div class="hero-in">
     <span class="kicker rv d1"><b>SPACEPORTS.EARTH</b> — INDEPENDENT GUIDE TO THE PLANETARY DEPARTURE NETWORK</span>
     <h1 class="wordmark rv d2">Spaceports<span class="earth">.Earth</span></h1>
@@ -451,11 +449,11 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
     </div>
     <div class="board rv" id="board" aria-live="polite">
       <div class="brow head">
-        <span class="c-hide"></span><span>Mission</span><span class="c-hide2">Vehicle · Operator</span><span>Port</span><span class="c-hide">Window opens (UTC)</span><span style="justify-self:end">Status</span>
+        <span class="c-hide"></span><span>Mission</span><span class="c-hide2">Vehicle · Operator</span><span class="c-pad">Port</span><span class="c-hide">Window opens (UTC)</span><span style="justify-self:end">Status</span>
       </div>
       <div class="board-msg" id="board-msg">ACQUIRING SIGNAL — LOADING UPCOMING DEPARTURES…</div>
     </div>
-    <p class="board-credit rv">Departure data: <a href="https://thespacedevs.com" rel="noopener">Launch Library 2 · The Space Devs</a>. Independent, community-maintained.</p>
+    <p class="board-credit rv">Departure data: <a href="https://thespacedevs.com" rel="noopener">Launch Library 2 · The Space Devs</a>. Independent, community-maintained.<span id="board-age"></span></p>
   </div>
 </section>
 
@@ -491,7 +489,7 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
 
     <div class="portmap rv" id="portmap" role="img" aria-label="World map with SpaceX launch sites pinging destination cities">
       <div class="pm-zoom" id="pmzoom">
-        <img class="pm-img" src="https://unpkg.com/three-globe@2.31.0/example/img/earth-night.jpg" alt="" crossorigin="anonymous">
+        <img class="pm-img" src="img/earth-night.jpg" alt="">
         <svg class="pm-svg" id="pmsvg" viewBox="0 0 1024 512" preserveAspectRatio="none"></svg>
       </div>
       <div class="pm-hud"><span>GROUND NETWORK · LIVE ECHO</span><span id="pm-ping">—</span></div>
@@ -605,17 +603,19 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
       <h2 class="sec-title">Earth ↔ Earth</h2>
       <span class="kicker">SEC 04 · POINT-TO-POINT</span>
     </div>
-    <p class="sec-note rv">The most radical spaceport idea isn't about leaving Earth at all: Starship flying city to city on suborbital arcs, most of the trip spent coasting above the atmosphere. Concept flight times below are from SpaceX's 2017 Earth-to-Earth study. The globe below is live — it draws the real day/night line for this exact moment from the Sun's position. Drag to spin it; hover a route to trace the arc.</p>
+    <p class="sec-note rv">The most radical spaceport idea isn't about leaving Earth at all: Starship flying city to city on suborbital arcs, most of the trip spent coasting above the atmosphere. Concept flight times below are from SpaceX's 2017 Earth-to-Earth study. The globe below is live — it draws the real day/night line for this exact moment from the Sun's position, while Starships fly every route: boost, coast above the atmosphere, belly-first entry, flip and landing burn. Drag to spin it; hover a route to fly it.</p>
 
     <div class="e2e">
       <figure class="sec-banner rv"><img src="starship-coast.jpg" alt="Starship in atmospheric flight above a coastline — AI concept" loading="lazy"><figcaption>Suborbital leg, feet dry · AI concept</figcaption></figure>
 
       <div class="globe-wrap rv" id="globewrap">
-        <canvas id="globe" aria-label="Interactive Earth globe with live day and night and concept routes"></canvas>
+        <canvas id="globe" role="img" aria-label="Interactive Earth globe with the live day and night line and Starships flying concept point-to-point routes"></canvas>
+        <canvas id="globe-fx" aria-hidden="true"></canvas>
+        <div class="globe-board" id="globe-board" aria-hidden="true"></div>
         <div class="globe-hud"><span class="sunlive" id="sunspot">SUBSOLAR — CALCULATING…</span><span>DRAG TO SPIN · LIVE TERMINATOR</span></div>
       </div>
 
-      <div class="routemap rv" id="flatmap">
+      <div class="routemap flat-hidden rv" id="flatmap">
         <svg viewBox="0 0 1000 520" role="img" aria-label="Diagram of concept city-to-city rocket routes">
           <g class="grat">
             <line x1="0" y1="100" x2="1000" y2="100"/><line x1="0" y1="200" x2="1000" y2="200"/>
@@ -644,12 +644,12 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
       </div>
 
       <div class="rtable rv">
-        <div class="rrow head"><span>Route</span><span>By Starship</span><span style="justify-self:end">By airliner</span></div>
-        <div class="rrow" data-r="r1" tabindex="0"><span class="rpair">New York<i>→</i>Shanghai</span><span class="rmin">39 <small>MIN</small></span><span class="rjet">~15 H</span></div>
-        <div class="rrow" data-r="r2" tabindex="0"><span class="rpair">London<i>→</i>New York</span><span class="rmin">29 <small>MIN</small></span><span class="rjet">~8 H</span></div>
-        <div class="rrow" data-r="r3" tabindex="0"><span class="rpair">L.A.<i>→</i>Toronto</span><span class="rmin">24 <small>MIN</small></span><span class="rjet">~4.5 H</span></div>
-        <div class="rrow" data-r="r4" tabindex="0"><span class="rpair">Sydney<i>→</i>Singapore</span><span class="rmin">31 <small>MIN</small></span><span class="rjet">~8 H</span></div>
-        <div class="rrow" data-r="r5" tabindex="0"><span class="rpair">Bangkok<i>→</i>Dubai</span><span class="rmin">27 <small>MIN</small></span><span class="rjet">~6.5 H</span></div>
+        <div class="rrow head"><span>Route</span><span>By Starship</span><span class="rjet-h" style="justify-self:end">By airliner</span></div>
+        <div class="rrow" data-r="r1" tabindex="0"><span class="rpair">New York<i>→</i><wbr>Shanghai</span><span class="rmin">39 <small>MIN</small></span><span class="rjet">~15 H</span></div>
+        <div class="rrow" data-r="r2" tabindex="0"><span class="rpair">London<i>→</i><wbr>New York</span><span class="rmin">29 <small>MIN</small></span><span class="rjet">~8 H</span></div>
+        <div class="rrow" data-r="r3" tabindex="0"><span class="rpair">L.A.<i>→</i><wbr>Toronto</span><span class="rmin">24 <small>MIN</small></span><span class="rjet">~4.5 H</span></div>
+        <div class="rrow" data-r="r4" tabindex="0"><span class="rpair">Sydney<i>→</i><wbr>Singapore</span><span class="rmin">31 <small>MIN</small></span><span class="rjet">~8 H</span></div>
+        <div class="rrow" data-r="r5" tabindex="0"><span class="rpair">Bangkok<i>→</i><wbr>Dubai</span><span class="rmin">27 <small>MIN</small></span><span class="rjet">~6.5 H</span></div>
       </div>
     </div>
   </div>
@@ -662,13 +662,13 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
       <h2 class="sec-title">Beyond</h2>
       <span class="kicker">SEC 05 · DESTINATIONS</span>
     </div>
-    <p class="sec-note rv">Where the departure board points next. Three destinations, three very different trips.</p>
+    <p class="sec-note rv">Where the departure board points next. Three destinations, three very different trips — each one flown live below.</p>
+    <figure class="sec-banner rv"><img src="orbit-starship.jpg" alt="Starship coasting on orbit above Earth — AI concept" loading="lazy"><figcaption>On orbit, sun-side · AI concept</figcaption></figure>
     <div class="dest">
       <article class="dcard rv">
-        <div class="orbit-scene s-leo" aria-hidden="true">
-          <img class="obg" src="orbit-starship.jpg" alt="" loading="lazy">
-          
-          <div class="ocap">STARSHIP ON ORBIT · AI CONCEPT</div>
+        <div class="orbit-scene" data-scene="orbit" role="img" aria-label="Animation: Starship circling Earth in low orbit">
+          <canvas aria-hidden="true"></canvas>
+          <div class="ohud" aria-hidden="true"><span data-hud="phase"><b>Low Earth orbit</b></span><span data-hud="clock">400 KM · 7.7 KM/S</span></div>
         </div>
         <div class="dnum">DEST 01 · 400 KM UP</div>
         <h3 class="dname">Orbit</h3>
@@ -681,15 +681,9 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
         </div>
       </article>
       <article class="dcard rv">
-        <div class="orbit-scene s-tli" aria-hidden="true">
-          <img class="mini-earth" src="https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57723/globe_west_2048.jpg" alt="" loading="lazy">
-          <img class="mini-moon" src="https://images-assets.nasa.gov/image/PIA00405/PIA00405~medium.jpg" alt="" loading="lazy">
-          <svg class="oflight" viewBox="0 0 360 180" preserveAspectRatio="none">
-            <path class="tli-track" d="M56 142 Q170 128 292 52" fill="none"/>
-            <path id="bpath2" d="M56 142 Q170 128 292 52" fill="none" stroke="none"/>
-            <g class="pship" data-follow="#bpath2" data-dur="11" data-scale=".5" opacity="0"><use href="#ship-shape"/></g>
-          </svg>
-          <div class="ocap">TRANS-LUNAR COAST · 3 DAYS OUT</div>
+        <div class="orbit-scene" data-scene="moon" role="img" aria-label="Animation: Starship leaving Earth orbit, coasting to the Moon and braking into lunar orbit">
+          <canvas aria-hidden="true"></canvas>
+          <div class="ohud" aria-hidden="true"><span data-hud="phase"><b>Trans-lunar coast</b></span><span data-hud="clock">3 DAYS OUT</span></div>
         </div>
         <div class="dnum">DEST 02 · 384,400 KM</div>
         <h3 class="dname">The Moon</h3>
@@ -702,13 +696,9 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
         </div>
       </article>
       <article class="dcard rv">
-        <div class="orbit-scene s-mars" aria-hidden="true">
-          <img class="big-mars" src="https://photojournal.jpl.nasa.gov/browse/PIA00407.jpg" alt="" loading="lazy">
-          <svg class="oflight" viewBox="0 0 360 180" preserveAspectRatio="none">
-            <path id="bpath3" d="M-36 44 C90 30 190 52 268 84" fill="none" stroke="none"/>
-            <g class="pship" data-follow="#bpath3" data-dur="12" data-scale=".55" opacity="0"><use href="#ship-shape"/></g>
-          </svg>
-          <div class="ocap">MARS APPROACH · CAPTURE BURN SOON</div>
+        <div class="orbit-scene" data-scene="mars" role="img" aria-label="Animation: Starship crossing to Mars on a transfer orbit, entering the atmosphere belly-first and landing">
+          <canvas aria-hidden="true"></canvas>
+          <div class="ohud" aria-hidden="true"><span data-hud="phase"><b>Mars approach</b></span><span data-hud="clock">~7-MONTH CROSSING</span></div>
         </div>
         <div class="dnum">DEST 03 · 26-MONTH WINDOWS</div>
         <h3 class="dname">Mars</h3>
@@ -853,10 +843,22 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
     <h2 class="man-title">Get on the list</h2>
     <p class="man-sub">Occasional dispatches when a new port breaks ground, a window opens, or the board changes in a big way. No noise — step off anytime.</p>
     <form class="man-form" id="manform" novalidate>
-      <input type="email" name="email" id="man-email" placeholder="you@earth.example" autocomplete="email" required aria-label="Email address">
+      <div class="man-row">
+        <input type="email" name="email" id="man-email" placeholder="you@earth.example" autocomplete="email" maxlength="254" required aria-label="Email address">
+        <input type="text" name="name" id="man-name" placeholder="First name (optional)" autocomplete="given-name" maxlength="60" aria-label="First name (optional)">
+      </div>
+      <fieldset class="man-tags">
+        <legend>Tell me about</legend>
+        <label><input type="checkbox" name="interest" value="launches" checked><span>Launch alerts</span></label>
+        <label><input type="checkbox" name="interest" value="earth-to-earth"><span>Earth ↔ Earth</span></label>
+        <label><input type="checkbox" name="interest" value="moon"><span>The Moon</span></label>
+        <label><input type="checkbox" name="interest" value="mars"><span>Mars</span></label>
+      </fieldset>
       <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <button class="man-btn" type="submit" id="man-btn">Join</button>
+      <button class="man-btn" type="submit" id="man-btn" disabled>Join the manifest</button>
     </form>
+    <noscript><p class="man-sub">Sign-ups need JavaScript switched on.</p></noscript>
+    <p class="man-fine">Occasional emails only, unsubscribe anytime. Your address is used only to send these dispatches — never sold or shared.</p>
     <div class="man-status" id="man-status" role="status"></div>
   </div>
 </section>
@@ -895,601 +897,6 @@ footer{border-top:1px solid var(--line);padding:70px 0 80px;background:var(--pan
   </div>
 </footer>
 
-<script>
-(function(){
-"use strict";
-var $=function(s,c){return (c||document).querySelector(s)};
-var $$=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
-var esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(m){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]})};
-
-/* ---- starfield (upper sky only, sparse) ---- */
-(function(){
-  var box=$("#stars"); if(!box) return;
-  var n=window.innerWidth<600?36:70, html="";
-  for(var i=0;i<n;i++){
-    var x=Math.random()*100, y=Math.random()*100, s=(Math.random()*1.6+.8).toFixed(1), d=(Math.random()*4).toFixed(2);
-    html+='<i style="left:'+x+'%;top:'+y+'%;width:'+s+'px;height:'+s+'px;animation-delay:'+d+'s"></i>';
-  }
-  box.innerHTML=html;
-})();
-
-/* ---- scroll reveal ---- */
-(function(){
-  var els=$$(".rv");
-  if(!("IntersectionObserver" in window)){els.forEach(function(e){e.classList.add("in")});return;}
-  var io=new IntersectionObserver(function(en){
-    en.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target);}});
-  },{threshold:.12});
-  els.forEach(function(e){io.observe(e)});
-})();
-
-/* ---- UTC clock ---- */
-(function(){
-  var a=$("#utc"), b=$("#utc2");
-  function tick(){
-    var d=new Date();
-    var t=[d.getUTCHours(),d.getUTCMinutes(),d.getUTCSeconds()].map(function(v){return String(v).padStart(2,"0")}).join(":");
-    if(a)a.textContent=t; if(b)b.textContent="UTC "+t;
-  }
-  tick(); setInterval(tick,1000);
-})();
-
-/* ---- departures board + countdown ---- */
-var LAUNCHES=[], FILTER="all", CD_TARGET=null;
-
-function fmtWindow(iso){
-  var d=new Date(iso);
-  if(isNaN(d)) return "TBD";
-  var M=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"][d.getUTCMonth()];
-  var p=function(v){return String(v).padStart(2,"0")};
-  return M+" "+p(d.getUTCDate())+" · "+p(d.getUTCHours())+":"+p(d.getUTCMinutes())+" UTC";
-}
-function splitName(l){
-  var parts=(l.name||"").split("|");
-  return {vehicle:(parts[0]||"").trim(), mission:(l.mission||parts[1]||parts[0]||"Mission").toString().trim()};
-}
-function statusClass(ab){
-  ab=(ab||"").toLowerCase();
-  if(ab==="go") return "go";
-  if(ab==="tbc"||ab==="tbd") return "tbd";
-  return "";
-}
-function renderBoard(){
-  var board=$("#board"); if(!board) return;
-  $$(".brow.r",board).forEach(function(r){r.remove()});
-  var msg=$("#board-msg");
-  var rows=LAUNCHES.filter(function(l){
-    return FILTER==="all" || ((l.lsp_name||"").toLowerCase().indexOf("spacex")>-1);
-  }).slice(0,9);
-  if(!rows.length){ if(msg){msg.style.display="block"; msg.innerHTML="NO DEPARTURES IN THIS FILTER — <a href='#' data-f-reset>show all traffic</a>";} return; }
-  if(msg) msg.style.display="none";
-  rows.forEach(function(l,i){
-    var nm=splitName(l), spx=(l.lsp_name||"").toLowerCase().indexOf("spacex")>-1;
-    var row=document.createElement("div");
-    row.className="brow r";
-    row.innerHTML=
-      (l.image?'<img class="bimg" src="'+esc(l.image)+'" alt="" loading="lazy">':'<span class="bimg" aria-hidden="true"></span>')+
-      '<div class="bmission">'+esc(nm.mission)+'<small>'+(spx?'<span class="spx-tag">SPACEX</span> · ':'')+esc(nm.vehicle)+"</small></div>"+
-      '<div class="bcell c-hide2"><b>'+esc(nm.vehicle)+"</b>"+esc(l.lsp_name||"")+"</div>"+
-      '<div class="bcell c-pad"><b>'+esc(l.pad||"Pad TBD")+"</b>"+esc(l.location||"")+"</div>"+
-      '<div class="bcell c-hide"><b>'+fmtWindow(l.net)+"</b>T-0 may shift</div>"+
-      '<span class="bstatus '+statusClass(l.status&&l.status.abbrev)+'">'+esc((l.status&&l.status.abbrev)||"—")+"</span>";
-    board.appendChild(row);
-    setTimeout(function(){row.classList.add("in")},60*i+40);
-  });
-}
-function startCountdown(){
-  var el=$("#cd"), sub=$("#cd-sub"); if(!el) return;
-  function tick(){
-    if(!CD_TARGET){el.textContent="OFFLINE"; return;}
-    var ms=CD_TARGET-Date.now();
-    if(ms<=0){el.innerHTML="<em>LIFTOFF</em>"; return;}
-    var s=Math.floor(ms/1000);
-    var d=Math.floor(s/86400), h=Math.floor(s%86400/3600), m=Math.floor(s%3600/60), sc=s%60;
-    var p=function(v){return String(v).padStart(2,"0")};
-    el.innerHTML="T-<em>"+p(d)+"</em>:"+p(h)+":"+p(m)+":"+p(sc);
-  }
-  tick(); setInterval(tick,1000);
-  if(sub&&LAUNCHES[0]){var nm=splitName(LAUNCHES[0]);sub.textContent=nm.mission+" — "+(LAUNCHES[0].location||LAUNCHES[0].pad||"");}
-}
-fetch("https://ll.thespacedevs.com/2.2.0/launch/upcoming/?mode=list&limit=14")
-  .then(function(r){if(!r.ok)throw 0;return r.json()})
-  .then(function(j){
-    LAUNCHES=(j.results||[]).filter(function(l){return l&&l.net});
-    if(LAUNCHES.length){CD_TARGET=new Date(LAUNCHES[0].net).getTime();}
-    renderBoard(); startCountdown();
-  })
-  .catch(function(){
-    var msg=$("#board-msg");
-    if(msg) msg.innerHTML='SIGNAL LOST — live feed unavailable right now. Check <a href="https://www.spacex.com/launches" rel="noopener">spacex.com/launches</a> or refresh in a minute.';
-    var el=$("#cd"), sub=$("#cd-sub");
-    if(el) el.textContent="NO SIGNAL";
-    if(sub) sub.textContent="Live feed unavailable";
-  });
-
-$$(".board-tools .fbtn").forEach(function(b){
-  b.addEventListener("click",function(){
-    $$(".board-tools .fbtn").forEach(function(x){x.classList.remove("on")});
-    b.classList.add("on"); FILTER=b.getAttribute("data-f"); renderBoard();
-  });
-});
-document.addEventListener("click",function(e){
-  if(e.target&&e.target.hasAttribute&&e.target.hasAttribute("data-f-reset")){
-    e.preventDefault(); FILTER="all";
-    $$(".board-tools .fbtn").forEach(function(x){x.classList.toggle("on",x.getAttribute("data-f")==="all")});
-    renderBoard();
-  }
-});
-
-/* ---- earth-to-earth route highlight ---- */
-$$(".rrow[data-r]").forEach(function(row){
-  var arc=document.getElementById("arc-"+row.getAttribute("data-r"));
-  var rid=row.getAttribute("data-r");
-  function on(){row.classList.add("hot"); if(arc)arc.classList.add("hot"); if(window.__routeHot)window.__routeHot(rid,true);}
-  function off(){row.classList.remove("hot"); if(arc)arc.classList.remove("hot"); if(window.__routeHot)window.__routeHot(rid,false);}
-  row.addEventListener("mouseenter",on); row.addEventListener("mouseleave",off);
-  row.addEventListener("focus",on); row.addEventListener("blur",off);
-  row.addEventListener("click",function(){ row.classList.contains("hot")?off():on(); });
-});
-
-/* ---- NASA public-domain gallery ---- */
-function loadGal(q){
-  var gal=$("#gal"); if(!gal) return;
-  gal.innerHTML='<div class="gal-msg">TUNING RECEIVER — LOADING IMAGERY…</div>';
-  fetch("https://images-api.nasa.gov/search?media_type=image&page_size=24&q="+encodeURIComponent(q))
-    .then(function(r){if(!r.ok)throw 0;return r.json()})
-    .then(function(j){
-      var items=((j.collection||{}).items||[]).filter(function(it){
-        return it.links&&it.links[0]&&it.links[0].href&&it.data&&it.data[0];
-      }).slice(0,8);
-      if(!items.length){gal.innerHTML='<div class="gal-msg">NOTHING ON THIS FREQUENCY — try another band.</div>';return;}
-      gal.innerHTML=items.map(function(it){
-        var href=encodeURI(it.links[0].href.replace(/^http:/,"https:"));
-        var title=it.data[0].title||"NASA archive";
-        return '<figure class="gitem"><img src="'+esc(href)+'" alt="'+esc(title)+'" loading="lazy"><figcaption>'+esc(title)+"</figcaption></figure>";
-      }).join("");
-    })
-    .catch(function(){
-      gal.innerHTML='<div class="gal-msg">SIGNAL LOST — imagery feed unavailable. Browse directly at <a href="https://images.nasa.gov" rel="noopener" style="color:var(--plume)">images.nasa.gov</a>.</div>';
-    });
-}
-$$(".gal-tools .fbtn").forEach(function(b){
-  b.addEventListener("click",function(){
-    $$(".gal-tools .fbtn").forEach(function(x){x.classList.remove("on")});
-    b.classList.add("on"); loadGal(b.getAttribute("data-q"));
-  });
-});
-loadGal("spacex starship");
-
-/* ---- starship flight log ---- */
-(function(){
-  var strip=$("#flstrip"); if(!strip) return;
-  function fnum(nm){var m=/flight\s+(\d+)/i.exec(nm||"");if(m)return m[1];var s=/SN\s?(\d+)/i.exec(nm||"");if(s)return "SN"+s[1];return "FT";}
-  function pill(ab,up){if(up)return ["up","UPCOMING"];ab=(ab||"").toLowerCase();
-    if(ab.indexOf("partial")>-1)return ["part","PARTIAL"];
-    if(ab.indexOf("success")>-1)return ["ok","SUCCESS"];
-    if(ab.indexOf("fail")>-1)return ["bad","FAILURE"];
-    return ["",(ab||"—").toUpperCase()];}
-  function fdate(iso){var d=new Date(iso);if(isNaN(d))return "TBD";var M=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"][d.getUTCMonth()];return M+" "+String(d.getUTCDate()).padStart(2,"0")+" "+d.getUTCFullYear();}
-  function card(l,up){
-    var nm=splitName(l),st=pill(l.status&&l.status.abbrev,up);
-    return '<article class="flcard'+(up?" next":"")+'"><div class="flnum">'+esc(fnum(l.name))+'</div>'+
-      '<div class="flmiss">'+esc(nm.mission)+'</div>'+
-      '<div class="fldate">'+fdate(l.net)+'</div>'+
-      '<div class="flpad">'+esc(l.pad||"")+'</div>'+
-      '<span class="flpill '+st[0]+'">'+st[1]+'</span></article>';
-  }
-  Promise.all([
-    fetch("https://ll.thespacedevs.com/2.2.0/launch/previous/?mode=list&limit=40&search=starship").then(function(r){if(!r.ok)throw 0;return r.json()}),
-    fetch("https://ll.thespacedevs.com/2.2.0/launch/upcoming/?mode=list&limit=5&search=starship").then(function(r){return r.ok?r.json():{results:[]}}).catch(function(){return {results:[]}})
-  ]).then(function(res){
-    var past=(res[0].results||[]).filter(function(l){return l&&l.net&&(l.lsp_name||"")==="SpaceX"});
-    var next=((res[1].results||[]).filter(function(l){return l&&l.net&&(l.lsp_name||"")==="SpaceX"}))[0];
-    past.sort(function(a,b){return new Date(b.net)-new Date(a.net)});
-    var c=$("#fl-count"); if(c)c.textContent=String(past.length);
-    if(past[0]){var st=pill(past[0].status&&past[0].status.abbrev,false);
-      $("#fl-last").textContent=st[1];
-      $("#fl-lastsub").textContent=splitName(past[0]).mission+" · "+fdate(past[0].net);}
-    if(next){$("#fl-next").textContent=fdate(next.net);$("#fl-nextsub").textContent=splitName(next).mission+" — "+(next.pad||"");}
-    else{$("#fl-next").textContent="TBD";$("#fl-nextsub").textContent="No date on the board yet";}
-    var cards=[]; if(next)cards.push(card(next,true));
-    past.forEach(function(l){cards.push(card(l,false))});
-    strip.innerHTML=cards.length?cards.join(""):'<div class="wire-msg">NO RECORDS FOUND.</div>';
-  }).catch(function(){strip.innerHTML='<div class="wire-msg">SIGNAL LOST — flight records unavailable right now.</div>';});
-})();
-
-/* ---- the wire (live news) ---- */
-(function(){
-  var box=$("#wirebox"); if(!box) return;
-  function ago(iso){var s=(Date.now()-new Date(iso))/1000;if(!isFinite(s)||s<0)return "";var m=Math.floor(s/60),h=Math.floor(m/60),d=Math.floor(h/24);return d>0?d+"D AGO":h>0?h+"H AGO":m+"M AGO";}
-  function load(q){
-    box.innerHTML='<div class="wire-msg">SCANNING FREQUENCIES…</div>';
-    var u="https://api.spaceflightnewsapi.net/v4/articles/?limit=8"+(q?"&search="+encodeURIComponent(q):"");
-    fetch(u).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){
-      var arts=(j.results||[]).slice(0,8);
-      if(!arts.length){box.innerHTML='<div class="wire-msg">NOTHING ON THIS BAND.</div>';return;}
-      box.innerHTML=arts.map(function(a){
-        return '<a class="wrow" href="'+esc(a.url)+'" target="_blank" rel="noopener">'+
-          (a.image_url?'<img class="wimg" src="'+esc(a.image_url)+'" alt="" loading="lazy">':'<span class="wimg" aria-hidden="true"></span>')+
-          '<span><span class="whead">'+esc(a.title)+'</span>'+
-          '<span class="wmeta"><b>'+esc(a.news_site||"")+'</b>'+(a.published_at?' · '+ago(a.published_at):'')+'</span>'+
-          '<span class="wsum">'+esc((a.summary||"").trim())+'</span></span>'+
-          '<span class="wgo">↗</span></a>';
-      }).join("");
-    }).catch(function(){box.innerHTML='<div class="wire-msg">SIGNAL LOST — news feed unavailable. Read direct at <a href="https://spacenews.com" rel="noopener">SpaceNews</a>.</div>';});
-  }
-  $$(".wire-tools .fbtn").forEach(function(b){
-    b.addEventListener("click",function(){
-      $$(".wire-tools .fbtn").forEach(function(x){x.classList.remove("on")});
-      b.classList.add("on"); load(b.getAttribute("data-w"));
-    });
-  });
-  load("spacex");
-})();
-
-/* ---- manifest signup ---- */
-(function(){
-  /* CONFIG — change this one line to your real inbox. First signup sends a
-     FormSubmit.co activation email to that address; click it once and the
-     list is live. No account needed. */
-  var SIGNUP_EMAIL="hello@spaceports.earth";
-  var f=$("#manform"); if(!f) return;
-  var btn=$("#man-btn"), st=$("#man-status"), em=$("#man-email");
-  f.addEventListener("submit",function(e){
-    e.preventDefault();
-    var v=(em.value||"").trim();
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){st.className="man-status err";st.textContent="THAT ADDRESS DOESN'T PARSE — CHECK IT AND RETRY.";return;}
-    if(f.querySelector('[name="_honey"]').value){return;}
-    btn.disabled=true; st.className="man-status"; st.textContent="TRANSMITTING…";
-    fetch("https://formsubmit.co/ajax/"+SIGNUP_EMAIL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json",Accept:"application/json"},
-      body:JSON.stringify({email:v,_subject:"New manifest signup — spaceports.earth",_template:"table"})
-    })
-    .then(function(r){return r.json()})
-    .then(function(j){
-      if(j&&(j.success==="true"||j.success===true)){st.className="man-status ok";st.textContent="CONFIRMED — YOU'RE ON THE MANIFEST.";f.reset();}
-      else{throw 0;}
-    })
-    .catch(function(){st.className="man-status err";st.textContent="TRANSMISSION FAILED — SIGN-UPS AREN'T OPEN YET. TRY AGAIN SOON.";})
-    .finally(function(){btn.disabled=false;});
-  });
-})();
-
-/* ---- hero: launch / cruise / landing choreography ---- */
-(function(){
-  var path=document.getElementById("fpath"), ship=document.getElementById("heroship"), plume=document.getElementById("heroplume");
-  if(!path||!ship||!path.getTotalLength) return;
-  var fpA=document.getElementById("fp-a"), fpB=document.getElementById("fp-b"), fpT=document.getElementById("fp-t");
-  var reduced=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var AX=150, BX=1050, GY=332, LIFT=60;
-  var total=path.getTotalLength();
-  var routes=[["NEW YORK","SHANGHAI","39 MIN · SUBORBITAL"],
-              ["LONDON","NEW YORK","29 MIN · SUBORBITAL"],
-              ["SYDNEY","SINGAPORE","31 MIN · SUBORBITAL"],
-              ["LOS ANGELES","TORONTO","24 MIN · SUBORBITAL"],
-              ["BANGKOK","DUBAI","27 MIN · SUBORBITAL"],
-              ["TOKYO","LOS ANGELES","32 MIN · SUBORBITAL"],
-              ["DELHI","LONDON","27 MIN · SUBORBITAL"],
-              ["SÃO PAULO","NEW YORK","33 MIN · SUBORBITAL"],
-              ["HONOLULU","TOKYO","30 MIN · SUBORBITAL"]];
-  var ri=0, dir=1, t=0, DUR=17000, last=null, run=true, waiting=false;
-  function setLabels(){var r=routes[ri];fpA.textContent=dir>0?r[0]:r[1];fpB.textContent=dir>0?r[1]:r[0];fpT.textContent=r[2];}
-  function heroPlace(p){
-    var x,y,rot,pl=0,sc=.95, upRot=dir>0?-90:270, endRot=dir>0?29:151;
-    if(p<.1){var e=(p/.1)*(p/.1); x=dir>0?AX:BX; y=GY-LIFT*e; rot=upRot; pl=1;}
-    else if(p<.86){
-      var q=(p-.1)/.76, s=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2, prog=dir>0?s:1-s;
-      var L=prog*total, pt=path.getPointAtLength(L);
-      var L2=Math.min(total,Math.max(0,L+(dir>0?1.5:-1.5))), pt2=path.getPointAtLength(L2);
-      x=pt.x; y=pt.y; rot=Math.atan2(pt2.y-pt.y,pt2.x-pt.x)*180/Math.PI;
-      pl=q<.08?1-q/.08:0; sc=.9+.35*Math.sin(Math.PI*s);
-    }
-    else if(p<.9){var q=(p-.86)/.04; x=dir>0?BX:AX; y=GY-LIFT; rot=endRot+(upRot-endRot)*q; pl=.5*q;}
-    else {var q=(p-.9)/.1, e=1-Math.pow(1-q,2); x=dir>0?BX:AX; y=GY-LIFT*(1-e); rot=upRot; pl=.9*(1-q*.45);}
-    ship.setAttribute("transform","translate("+x+" "+y+") rotate("+rot+") scale("+sc+")");
-    if(plume) plume.setAttribute("opacity",String(Math.max(0,pl)));
-  }
-  var traffic=[];
-  [["traffic1","fpath2",21000,7000],["traffic2","fpath3",26000,13000]].forEach(function(cfg){
-    var el=document.getElementById(cfg[0]), tp=document.getElementById(cfg[1]);
-    if(el&&tp&&tp.getTotalLength) traffic.push({el:el,path:tp,total:tp.getTotalLength(),dur:cfg[2],off:cfg[3]});
-  });
-  function placeTraffic(now){
-    traffic.forEach(function(tr){
-      var q=((now+tr.off)%tr.dur)/tr.dur;
-      var s=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;
-      var L=s*tr.total, pt=tr.path.getPointAtLength(L);
-      var pt2=tr.path.getPointAtLength(Math.min(tr.total,L+1.5));
-      var edge=Math.max(0,Math.min(1,Math.min(q/.07,(1-q)/.07)));
-      tr.el.setAttribute("opacity",String(edge));
-      tr.el.setAttribute("transform","translate("+pt.x+" "+pt.y+") rotate("+(Math.atan2(pt2.y-pt.y,pt2.x-pt.x)*180/Math.PI)+")");
-    });
-  }
-  if(reduced){ setLabels(); heroPlace(.5); ship.setAttribute("opacity","1"); if(plume)plume.setAttribute("opacity","0"); return; }
-  setLabels();
-  var hero=document.querySelector(".hero");
-  if("IntersectionObserver" in window && hero){
-    new IntersectionObserver(function(en){en.forEach(function(x){run=x.isIntersecting;})},{threshold:.05}).observe(hero);
-  }
-  function frame(now){
-    requestAnimationFrame(frame);
-    if(!run){last=now;return;}
-    placeTraffic(now);
-    if(waiting){last=now;return;}
-    if(last==null)last=now;
-    t+=now-last; last=now;
-    var p=t/DUR;
-    if(p>=1){
-      heroPlace(1); if(plume)plume.setAttribute("opacity","0");
-      ship.setAttribute("opacity","0"); waiting=true;
-      setTimeout(function(){
-        dir*=-1; if(dir>0)ri=(ri+1)%routes.length;
-        setLabels(); t=0; waiting=false; ship.setAttribute("opacity","1");
-      },1600);
-      return;
-    }
-    ship.setAttribute("opacity","1");
-    heroPlace(p);
-  }
-  requestAnimationFrame(frame);
-})();
-
-/* ---- beyond: path-following ships ---- */
-(function(){
-  var ships=$$(".pship"); if(!ships.length) return;
-  var reduced=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-  ships.forEach(function(sp,i){
-    var pathEl=document.querySelector(sp.getAttribute("data-follow"));
-    if(!pathEl||!pathEl.getTotalLength) return;
-    var dur=(parseFloat(sp.getAttribute("data-dur"))||10)*1000;
-    var scl=parseFloat(sp.getAttribute("data-scale"))||1;
-    var total=pathEl.getTotalLength(), t0=performance.now()+i*1400;
-    function put(L,op){
-      var pt=pathEl.getPointAtLength(L), pt2=pathEl.getPointAtLength(Math.min(total,L+1.5));
-      sp.setAttribute("opacity",String(op));
-      sp.setAttribute("transform","translate("+pt.x+" "+pt.y+") rotate("+(Math.atan2(pt2.y-pt.y,pt2.x-pt.x)*180/Math.PI)+") scale("+scl+")");
-    }
-    if(reduced){ put(total*.55,1); return; }
-    function fr(now){
-      requestAnimationFrame(fr);
-      var q=((now-t0)/dur)%1; if(q<0)q+=1;
-      var s=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;
-      var edge=Math.max(0,Math.min(1,Math.min(q/.08,(1-q)/.08)));
-      put(s*total,edge);
-    }
-    requestAnimationFrame(fr);
-  });
-})();
-
-/* ---- ports: radar echo map ---- */
-(function(){
-  var svg=document.getElementById("pmsvg"), zoom=document.getElementById("pmzoom"),
-      box=document.getElementById("portmap"), hudP=document.getElementById("pm-ping");
-  if(!svg||!zoom||!box) return;
-  var W=1024,H=512,NS="http://www.w3.org/2000/svg";
-  function XY(lat,lon){return [(lon+180)/360*W,(90-lat)/180*H];}
-  function el(n,at){var e=document.createElementNS(NS,n);for(var k in at)e.setAttribute(k,at[k]);svg.appendChild(e);return e;}
-  var PORTS=[[25.99,-97.16],[28.56,-80.58],[34.63,-120.61]];
-  var FUT=[[40.4,-73.3],[34.9,140.1]];
-  var CITIES=[["LOS ANGELES",34.05,-118.24],["TORONTO",43.65,-79.38],["NEW YORK",40.71,-74.01],["LONDON",51.51,-0.13],["PARIS",48.86,2.35],["DUBAI",25.2,55.27],["DELHI",28.61,77.21],["BANGKOK",13.76,100.5],["SINGAPORE",1.35,103.82],["SHANGHAI",31.23,121.47],["TOKYO",35.68,139.69],["SEOUL",37.57,126.98],["SYDNEY",-33.87,151.21],["HONOLULU",21.31,-157.86],["MEXICO CITY",19.43,-99.13],["SÃO PAULO",-23.55,-46.63],["ANCHORAGE",61.22,-149.9],["CAPE TOWN",-33.92,18.42]];
-  var rings=[];
-  PORTS.forEach(function(p,i){
-    var xy=XY(p[0],p[1]);
-    el("circle",{cx:xy[0],cy:xy[1],r:3.2,"class":"pm-port"});
-    [-W,0,W].forEach(function(sh){
-      rings.push({x:xy[0]+sh,y:xy[1],
-        c1:el("circle",{cx:xy[0]+sh,cy:xy[1],r:0,"class":"pm-ring"}),
-        c2:el("circle",{cx:xy[0]+sh,cy:xy[1],r:0,"class":"pm-ring"}),
-        off:i*2600});
-    });
-  });
-  FUT.forEach(function(p){var xy=XY(p[0],p[1]);el("circle",{cx:xy[0],cy:xy[1],r:4,"class":"pm-fut"});});
-  var cities=CITIES.map(function(c){
-    var xy=XY(c[1],c[2]);
-    var dot=el("circle",{cx:xy[0],cy:xy[1],r:2.1,"class":"pm-city"});
-    var lbl=el("text",{x:xy[0]+5,y:xy[1]-4,"class":"pm-lbl"});
-    lbl.textContent=c[0];
-    return {x:xy[0],y:xy[1],dot:dot,lbl:lbl,lit:-9999};
-  });
-  var T=9000, RMAX=620, BAND=16;
-  var reduced=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var visible=false, started=false;
-  function start(){ if(!started){started=true; requestAnimationFrame(function(){zoom.classList.add("out");}); } }
-  if("IntersectionObserver" in window){
-    new IntersectionObserver(function(en){en.forEach(function(x){visible=x.isIntersecting; if(x.isIntersecting)start();})},{threshold:.15}).observe(box);
-  } else { visible=true; start(); }
-  if(reduced){
-    zoom.classList.add("out");
-    cities.forEach(function(c){c.dot.classList.add("lit");});
-    rings.forEach(function(r){r.c1.setAttribute("opacity","0");r.c2.setAttribute("opacity","0");});
-    if(hudP)hudP.textContent=cities.length+" CITIES MAPPED";
-    return;
-  }
-  function frame(now){
-    requestAnimationFrame(frame);
-    if(!visible) return;
-    var count=0;
-    rings.forEach(function(rg){
-      [[rg.c1,0],[rg.c2,T/2]].forEach(function(pair){
-        var q=((now+rg.off+pair[1])%T)/T, r=q*RMAX;
-        pair[0].setAttribute("r",String(r));
-        pair[0].setAttribute("opacity",String(.8*(1-q)));
-        cities.forEach(function(ct){
-          var d=Math.hypot(ct.x-rg.x,ct.y-rg.y);
-          if(Math.abs(d-r)<BAND) ct.lit=now;
-        });
-      });
-    });
-    cities.forEach(function(ct){
-      var on=now-ct.lit<900;
-      ct.dot.classList[on?"add":"remove"]("lit");
-      ct.lbl.classList[on?"add":"remove"]("lit");
-      if(on)count++;
-    });
-    if(hudP)hudP.textContent=count?count+" CITIES IN RANGE":"SWEEPING…";
-  }
-  requestAnimationFrame(frame);
-})();
-
-/* ---- e2e: live 3D globe with real-time terminator ---- */
-(function(){
-  var wrap=document.getElementById("globewrap"); if(!wrap) return;
-  var canvas=document.getElementById("globe"), flat=document.getElementById("flatmap"), hud=document.getElementById("sunspot");
-  var hooks={}, started=false;
-  window.__routeHot=function(id,on){var m=hooks[id];if(m){m.color.setHex(on?0xFF7A2F:0x3D4A66);m.opacity=on?1:.75;}};
-  function fail(){wrap.style.display="none"; if(flat)flat.classList.remove("flat-hidden");}
-  function subsolar(){
-    var d=new Date(), N=(Date.now()-Date.UTC(d.getUTCFullYear(),0,0))/86400000;
-    var decl=23.44*Math.sin((2*Math.PI/365)*(284+N));
-    var B=2*Math.PI*(N-81)/364;
-    var eot=9.87*Math.sin(2*B)-7.53*Math.cos(B)-1.5*Math.sin(B);
-    var hrs=d.getUTCHours()+d.getUTCMinutes()/60+d.getUTCSeconds()/3600;
-    var lon=180-15*(hrs+eot/60);
-    while(lon>180)lon-=360; while(lon<-180)lon+=360;
-    return {lat:decl,lon:lon};
-  }
-  function boot(){
-    if(started)return; started=true;
-    var s=document.createElement("script");
-    s.src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
-    s.onload=init; s.onerror=fail;
-    document.head.appendChild(s);
-  }
-  if("IntersectionObserver" in window){
-    var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){io.disconnect();boot();}})},{rootMargin:"600px"});
-    io.observe(wrap);
-  } else boot();
-  function init(){
-    try{
-      var reduced=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-      var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
-      var scene=new THREE.Scene();
-      var camera=new THREE.PerspectiveCamera(38,1,.1,100); camera.position.z=2.75;
-      var group=new THREE.Group(); scene.add(group);
-      function size(){
-        var w=wrap.clientWidth,hh=wrap.clientHeight;
-        renderer.setSize(w,hh,false); camera.aspect=w/hh; camera.updateProjectionMatrix();
-      }
-      size(); window.addEventListener("resize",function(){size();needs=true;});
-      function llv(lat,lon,r){
-        var phi=(90-lat)*Math.PI/180, th=(lon+180)*Math.PI/180;
-        return new THREE.Vector3(-r*Math.sin(phi)*Math.cos(th), r*Math.cos(phi), r*Math.sin(phi)*Math.sin(th));
-      }
-      var sunU={value:new THREE.Vector3(1,0,0)};
-      var loader=new THREE.TextureLoader(); loader.crossOrigin="anonymous";
-      var texN=0;
-      function texDone(){ texN++; if(texN===2){ if(flat)flat.classList.add("flat-hidden"); needs=true; } }
-      var dayT=loader.load("https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg",texDone,undefined,fail);
-      var nightT=loader.load("https://unpkg.com/three-globe@2.31.0/example/img/earth-night.jpg",texDone,undefined,fail);
-      var earthMat=new THREE.ShaderMaterial({
-        uniforms:{dayT:{value:dayT},nightT:{value:nightT},sunDir:sunU},
-        vertexShader:[
-          "varying vec2 vUv; varying vec3 vN;",
-          "void main(){ vUv=uv; vN=normalize(normal);",
-          "gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }"
-        ].join("\n"),
-        fragmentShader:[
-          "uniform sampler2D dayT; uniform sampler2D nightT; uniform vec3 sunDir;",
-          "varying vec2 vUv; varying vec3 vN;",
-          "void main(){",
-          " float c=dot(normalize(vN),normalize(sunDir));",
-          " float m=smoothstep(-0.10,0.20,c);",
-          " vec3 day=texture2D(dayT,vUv).rgb;",
-          " vec3 night=texture2D(nightT,vUv).rgb*1.5+vec3(0.02,0.04,0.08);",
-          " vec3 col=mix(night,day,m);",
-          " float band=smoothstep(0.16,0.0,abs(c-0.02));",
-          " col+=vec3(1.0,0.45,0.18)*band*0.16;",
-          " gl_FragColor=vec4(col,1.0); }"
-        ].join("\n")
-      });
-      group.add(new THREE.Mesh(new THREE.SphereGeometry(1,64,64),earthMat));
-      var atmoMat=new THREE.ShaderMaterial({
-        uniforms:{},transparent:true,side:THREE.BackSide,depthWrite:false,blending:THREE.AdditiveBlending,
-        vertexShader:[
-          "varying vec3 vN; varying vec3 vP;",
-          "void main(){ vN=normalize(mat3(modelMatrix)*normal); vP=(modelMatrix*vec4(position,1.0)).xyz;",
-          "gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }"
-        ].join("\n"),
-        fragmentShader:[
-          "varying vec3 vN; varying vec3 vP;",
-          "void main(){ float f=pow(1.0-abs(dot(normalize(vN),normalize(cameraPosition-vP))),3.0);",
-          "gl_FragColor=vec4(0.30,0.52,1.0,1.0)*f*0.9; }"
-        ].join("\n")
-      });
-      group.add(new THREE.Mesh(new THREE.SphereGeometry(1.035,48,48),atmoMat));
-      var CITIES=[[34.05,-118.24],[43.65,-79.38],[40.71,-74.01],[51.51,-.13],[25.20,55.27],[13.76,100.50],[1.35,103.82],[31.23,121.47],[35.68,139.69],[-33.87,151.21]];
-      var dotG=new THREE.SphereGeometry(.012,8,8), dotM=new THREE.MeshBasicMaterial({color:0xCBD2DC});
-      CITIES.forEach(function(c){var m=new THREE.Mesh(dotG,dotM);m.position.copy(llv(c[0],c[1],1.005));group.add(m);});
-      var ROUTES=[["r1",40.71,-74.01,31.23,121.47],["r2",51.51,-.13,40.71,-74.01],["r3",34.05,-118.24,43.65,-79.38],["r4",-33.87,151.21,1.35,103.82],["r5",13.76,100.50,25.20,55.27]];
-      var pulses=[], pulseG=new THREE.SphereGeometry(.009,8,8);
-      ROUTES.forEach(function(r,i){
-        var a=llv(r[1],r[2],1.004), b=llv(r[3],r[4],1.004);
-        var mid=a.clone().add(b).multiplyScalar(.5);
-        mid.normalize().multiplyScalar(1+a.distanceTo(b)*.32);
-        var curve=new THREE.QuadraticBezierCurve3(a,mid,b);
-        var mat=new THREE.MeshBasicMaterial({color:0x3D4A66,transparent:true,opacity:.75});
-        hooks[r[0]]=mat;
-        group.add(new THREE.Mesh(new THREE.TubeGeometry(curve,40,.0045,6,false),mat));
-        var pm=new THREE.Mesh(pulseG,new THREE.MeshBasicMaterial({color:0xFF7A2F}));
-        group.add(pm); pulses.push({c:curve,m:pm,o:i*.2});
-      });
-      group.rotation.y=-1.1; group.rotation.x=.28;
-      var dragging=false,lx=0,ly=0,lastDrag=0,needs=true;
-      canvas.addEventListener("pointerdown",function(e){dragging=true;lx=e.clientX;ly=e.clientY;canvas.setPointerCapture&&canvas.setPointerCapture(e.pointerId);});
-      window.addEventListener("pointermove",function(e){
-        if(!dragging)return;
-        group.rotation.y+=(e.clientX-lx)*.005;
-        group.rotation.x=Math.max(-.6,Math.min(.6,group.rotation.x+(e.clientY-ly)*.003));
-        lx=e.clientX;ly=e.clientY;lastDrag=performance.now();needs=true;
-      });
-      window.addEventListener("pointerup",function(){dragging=false;lastDrag=performance.now();});
-      function sun(){
-        var sp=subsolar();
-        sunU.value.copy(llv(sp.lat,sp.lon,1)).normalize();
-        if(hud)hud.innerHTML="SUBSOLAR <b>"+Math.abs(sp.lat).toFixed(1)+"°"+(sp.lat>=0?"N":"S")+" · "+Math.abs(sp.lon).toFixed(1)+"°"+(sp.lon>=0?"E":"W")+"</b> — LIVE";
-        needs=true;
-      }
-      sun(); setInterval(sun,60000);
-      var visible=true;
-      if("IntersectionObserver" in window){
-        new IntersectionObserver(function(en){en.forEach(function(x){visible=x.isIntersecting;})},{threshold:.02}).observe(wrap);
-      }
-      function loop(now){
-        requestAnimationFrame(loop);
-        if(!visible)return;
-        var moving=!reduced;
-        if(moving){
-          if(!dragging && now-lastDrag>2500) group.rotation.y+=.0011;
-          pulses.forEach(function(p){p.m.position.copy(p.c.getPoint((now/4200+p.o)%1));});
-          renderer.render(scene,camera);
-        } else if(needs){ renderer.render(scene,camera); needs=false; }
-      }
-      requestAnimationFrame(loop);
-    }catch(e){ fail(); }
-  }
-})();
-
-/* ---- holdings: market signals feed ---- */
-(function(){
-  var box=document.getElementById("sigbox"); if(!box) return;
-  Promise.all([
-    fetch("https://api.spaceflightnewsapi.net/v4/articles/?limit=6&search=spacex%20valuation").then(function(r){return r.ok?r.json():{results:[]}}).catch(function(){return {results:[]}}),
-    fetch("https://api.spaceflightnewsapi.net/v4/articles/?limit=6&search=xai").then(function(r){return r.ok?r.json():{results:[]}}).catch(function(){return {results:[]}})
-  ]).then(function(rs){
-    var seen={},all=[];
-    rs.forEach(function(j){(j.results||[]).forEach(function(a){if(a&&a.id&&!seen[a.id]){seen[a.id]=1;all.push(a);}})});
-    all.sort(function(a,b){return new Date(b.published_at)-new Date(a.published_at)});
-    all=all.slice(0,5);
-    if(!all.length){box.innerHTML='<div class="wire-msg">NO SIGNALS ON THIS BAND RIGHT NOW.</div>';return;}
-    box.innerHTML=all.map(function(a){
-      return '<a class="sig" href="'+esc(a.url)+'" target="_blank" rel="noopener"><span class="st">'+esc(a.title)+'</span><span class="sm">'+esc(a.news_site||"")+'</span></a>';
-    }).join("");
-  }).catch(function(){box.innerHTML='<div class="wire-msg">SIGNAL LOST.</div>';});
-})();
-
-})();
-</script>
+<script src="app.js" defer></script>
 </body>
 </html>
